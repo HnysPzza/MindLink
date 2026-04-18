@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.MeditationPlayerPage"
+             x:DataType="vm:MeditationPlayerViewModel"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Padding="20,52,20,12">
+                <Label Grid.Column="0"
+                       Text="←"
+                       FontSize="22"
+                       TextColor="{StaticResource AccentPrimary}"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Grid.Column="1"
+                       Text="Meditation Session"
+                       Style="{StaticResource CardTitle}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <BoxView Grid.Column="2" WidthRequest="22" BackgroundColor="Transparent"/>
+            </Grid>
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20,0,20,40" Spacing="20">
+                    <Border StrokeShape="RoundRectangle 24" StrokeThickness="0" Padding="20" Margin="0,12,0,0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#DBEAFE" Offset="0"/>
+                                <GradientStop Color="#EFF6FF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow>
+                            <Shadow Brush="#2563EB" Offset="0,6" Radius="20" Opacity="0.12"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="14" HorizontalOptions="Center">
+                            <Label Text="{Binding IconEmoji}" FontSize="52" HorizontalOptions="Center"/>
+                            <Label Text="{Binding MeditationTitle}" Style="{StaticResource SectionHeading}" HorizontalOptions="Center"/>
+                            <Label Text="{Binding Subtitle}" Style="{StaticResource BodyText}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                                <Label Text="{Binding DurationLabel}" Style="{StaticResource CaptionText}"/>
+                                <Label Text="•" Style="{StaticResource CaptionText}"/>
+                                <Label Text="{Binding Difficulty}" Style="{StaticResource CaptionText}"/>
+                                <Label Text="•" Style="{StaticResource CaptionText}"/>
+                                <Label Text="{Binding Category}" Style="{StaticResource CaptionText}"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                <GradientStop Color="#B3FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Current Guidance" Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{Binding CurrentPrompt}" Style="{StaticResource BodyText}" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding StatusText}" Style="{StaticResource CaptionText}" HorizontalOptions="Center"/>
+                            <Border StrokeShape="RoundRectangle 6" BackgroundColor="{StaticResource AccentSubtle}" HeightRequest="8">
+                                <BoxView BackgroundColor="{StaticResource AccentPrimary}"
+                                         HeightRequest="8"
+                                         HorizontalOptions="Start"
+                                         WidthRequest="220"
+                                         ScaleX="{Binding Progress}"
+                                         AnchorX="0"/>
+                            </Border>
+                            <Label HorizontalOptions="Center" Style="{StaticResource CaptionText}">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}Step {0} of {1}">
+                                        <Binding Path="CurrentStep"/>
+                                        <Binding Path="TotalSteps"/>
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                <GradientStop Color="#B3FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Why this session helps" Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{Binding Benefits}" Style="{StaticResource BodyText}"/>
+                            <Label Text="{Binding Description}" Style="{StaticResource CaptionText}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <VerticalStackLayout Spacing="12">
+                        <Button Text="Start Narration"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding StartNarrationCommand}"
+                                IsEnabled="{Binding IsPlaying, Converter={StaticResource InverseBoolConverter}}"/>
+                        <Button Text="Stop Narration"
+                                Style="{StaticResource OutlineButton}"
+                                Command="{Binding StopNarrationCommand}"
+                                IsEnabled="{Binding IsPlaying}"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

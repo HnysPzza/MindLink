@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.AssessmentPage"
+             x:DataType="vm:AssessmentViewModel">
+ 
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+        <ScrollView ZIndex="1">
+            <VerticalStackLayout Padding="20,52,20,40" Spacing="18">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Your Assessment" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="A deeper 10-point emotional check-in for mood, pressure, focus, hope, and coping." Style="{StaticResource BodyText}"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="History" Style="{StaticResource OutlineButton}" WidthRequest="96" HeightRequest="40" Command="{Binding OpenHistoryCommand}"/>
+                </Grid>
+
+                <Border StrokeShape="RoundRectangle 24" StrokeThickness="0" Padding="20">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2563EB" Offset="0"/>
+                            <GradientStop Color="#3B82F6" Offset="0.55"/>
+                            <GradientStop Color="#60A5FA" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow><Shadow Brush="#332563EB" Offset="0,12" Radius="26" Opacity="0.28"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="12">
+                        <Border HorizontalOptions="Start" StrokeThickness="0" BackgroundColor="#22FFFFFF" StrokeShape="RoundRectangle 14" Padding="12,6">
+                            <Label Text="10 guided prompts" FontFamily="DMSansSemiBold" FontSize="12"/>
+                        </Border>
+                        <Label Text="Take a slow, honest snapshot of how you are doing right now." FontFamily="SyneBold" FontSize="24"/>
+                        <Label Text="Your answers stay focused on emotional wellbeing, stress load, and how supported you feel today." FontFamily="JakartaRegular" FontSize="13" TextColor="#EAF2FF"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 18" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                    <VerticalStackLayout Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto,16,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="Progress" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Move steadily through each prompt. There are no right answers here." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="End">
+                                <Label Text="{Binding AnsweredCount}" FontFamily="SyneBold" FontSize="22" TextColor="{StaticResource AccentPrimary}" HorizontalOptions="End"/>
+                                <Label Text="Answered" Style="{StaticResource CaptionText}" HorizontalOptions="End"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="End">
+                                <Label Text="{Binding QuestionCount}" FontFamily="SyneBold" FontSize="22" TextColor="{StaticResource AccentPrimary}" HorizontalOptions="End"/>
+                                <Label Text="Total" Style="{StaticResource CaptionText}" HorizontalOptions="End"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                        <ProgressBar Progress="{Binding ProgressValue}" ProgressColor="#2563EB" BackgroundColor="#DBEAFE" HeightRequest="8"/>
+                        <Label Text="{Binding ProgressText}" Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border IsVisible="{Binding IsSubmitted}" StrokeShape="RoundRectangle 18" Stroke="{StaticResource CardBorderColor}" Padding="20,18">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#2563EB" Offset="0"/>
+                            <GradientStop Color="#3B82F6" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,6" Radius="20" Opacity="0.30"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Assessment Complete" FontFamily="DMSansBold" FontSize="16"/>
+                        <Label Text="{Binding ResultText}" FontFamily="SyneBold" FontSize="24"/>
+                        <Label Text="{Binding ResultSummary}" FontFamily="JakartaRegular" FontSize="14"/>
+                        <Label Text="{Binding ComparisonSummary}" FontFamily="JakartaRegular" FontSize="13" TextColor="#DBEAFE"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="1" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How often do you feel anxious or overwhelmed?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding AnxietyOptions}" SelectedIndex="{Binding AnxietyIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="2" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How is your sleep quality recently?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding SleepOptions}" SelectedIndex="{Binding SleepIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="3" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How are your energy levels today?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding EnergyOptions}" SelectedIndex="{Binding EnergyIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="4" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How connected do you feel to others?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding SocialOptions}" SelectedIndex="{Binding SocialIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="5" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How clear or focused has your mind felt?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding ConcentrationOptions}" SelectedIndex="{Binding ConcentrationIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="6" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How steady has your appetite or eating routine felt?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding AppetiteOptions}" SelectedIndex="{Binding AppetiteIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="7" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How strong are physical stress symptoms like tension or headaches?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding PhysicalOptions}" SelectedIndex="{Binding PhysicalSymptomsIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="8" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How hopeful do you feel about the next few days?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding HopeOptions}" SelectedIndex="{Binding HopeIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="9" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How much confidence do you have in yourself right now?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding ConfidenceOptions}" SelectedIndex="{Binding ConfidenceIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#CCFFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
+                    <VerticalStackLayout Spacing="12"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"><Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 17"><Label Text="10" FontFamily="DMSansBold" FontSize="14" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/></Border><Label Grid.Column="1" Text="How able do you feel to cope with what is on your plate?" Style="{StaticResource CardTitle}" VerticalOptions="Center"/></Grid><Border Style="{StaticResource InputBorder}" Padding="14,2"><Picker ItemsSource="{Binding CopingOptions}" SelectedIndex="{Binding CopingIndex}" Title="Select an option..."/></Border></VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="When you are ready, submit to see your current support recommendation and compare it with your last detailed check-in." Style="{StaticResource BodyText}"/>
+                        <Grid ColumnDefinitions="*,12,*">
+                            <Button Grid.Column="0" Text="Submit Assessment" Style="{StaticResource PrimaryButton}" Command="{Binding SubmitAssessmentCommand}" IsEnabled="{Binding CanSubmit}"/>
+                            <Button Grid.Column="2" Text="Reset" Style="{StaticResource OutlineButton}" Command="{Binding ResetAssessmentCommand}" IsVisible="{Binding IsSubmitted}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

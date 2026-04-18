@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.AssessmentHistoryPage"
+             x:DataType="vm:AssessmentHistoryViewModel"
+             Shell.NavBarIsVisible="False">
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FFEEF2FF" Offset="0"/>
+                        <GradientStop Color="#00EEF2FF" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="←" FontSize="22" TextColor="{StaticResource AccentPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" Spacing="2">
+                        <Label Text="Assessment History" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Review how your emotional risk has changed over time." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20,0,20,36" Spacing="14">
+                    <Border IsVisible="{Binding IsEmpty}" StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="24">
+                        <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                        <Label Text="Complete an assessment and it will appear here with its score and guidance." Style="{StaticResource BodyText}" HorizontalTextAlignment="Center"/>
+                    </Border>
+                    <VerticalStackLayout IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBoolConverter}}" BindableLayout.ItemsSource="{Binding Items}" Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:AssessmentResult">
+                                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                                    <VerticalStackLayout Spacing="8">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0" Text="{Binding RiskLevel}" Style="{StaticResource CardTitle}"/>
+                                            <Label Grid.Column="1" Text="{Binding Date, StringFormat='{}{0:MMM d, h:mm tt}'}" Style="{StaticResource CaptionText}"/>
+                                        </Grid>
+                                        <Label Text="{Binding Recommendation}" Style="{StaticResource BodyText}"/>
+                                        <Label Text="{Binding RiskScore, StringFormat='Risk score: {0:F1} / 5.0'}" Style="{StaticResource CaptionText}"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

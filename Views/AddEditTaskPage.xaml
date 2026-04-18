@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.AddEditTaskPage"
+             x:DataType="vm:AddEditTaskViewModel">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+        <ScrollView ZIndex="1">
+            <VerticalStackLayout Padding="20,52,20,40" Spacing="18">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="←" FontSize="22" TextColor="{StaticResource AccentPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CancelCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" Spacing="2">
+                        <Label Text="{Binding PageHeading}" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Add a clear deadline and reminder so the app can follow up until it’s done." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Border StrokeShape="RoundRectangle 24" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background>
+                            <AppThemeBinding Light="#D9FFFFFF" Dark="#1E293B"/>
+                        </Border.Background>
+                    <VerticalStackLayout Spacing="16">
+                        <Entry Text="{Binding TaskTitle}" Placeholder="Task title" FontFamily="DMSansMedium"/>
+                        <Editor Text="{Binding TaskDescription}" Placeholder="Description" PlaceholderColor="#94A3B8" AutoSize="TextChanges" MinimumHeightRequest="100"/>
+                        <Picker Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
+                        <Picker Title="Priority" ItemsSource="{Binding Priorities}" SelectedItem="{Binding SelectedPriority}"/>
+                        <Grid ColumnDefinitions="*,12,*">
+                            <DatePicker Grid.Column="0" Date="{Binding DueDate}"/>
+                            <TimePicker Grid.Column="2" Time="{Binding DueTime}"/>
+                        </Grid>
+                        <Picker Title="Reminder" ItemsSource="{Binding ReminderOffsets}" SelectedItem="{Binding SelectedReminderOffset}"/>
+                        <Button Text="Save Task" Style="{StaticResource PrimaryButton}" Command="{Binding SaveTaskCommand}"/>
+                        <Button Text="Delete Task" Style="{StaticResource OutlineButton}" Command="{Binding DeleteTaskCommand}" IsVisible="{Binding IsEditing}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

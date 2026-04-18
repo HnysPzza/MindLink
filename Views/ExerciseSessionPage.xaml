@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.ExerciseSessionPage"
+             x:DataType="vm:ExerciseSessionViewModel"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid>
+        <!-- Animated gradient background -->
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+
+            <!-- ── Top bar ── -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Padding="20,52,20,12">
+                <Label Grid.Column="0"
+                       Text="←" FontSize="22"
+                       TextColor="{StaticResource AccentPrimary}"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Grid.Column="1"
+                       Text="{Binding ExerciseTitle}"
+                       Style="{StaticResource CardTitle}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <!-- spacer to balance the back arrow -->
+                <BoxView Grid.Column="2" WidthRequest="22" BackgroundColor="Transparent"/>
+            </Grid>
+
+            <!-- ── Body ── -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20,0,20,48" Spacing="0">
+
+                    <!-- ════════════════════════════════════════════════
+                         PHASE: READY
+                         ════════════════════════════════════════════════ -->
+                    <VerticalStackLayout IsVisible="{Binding Phase,
+                                             Converter={StaticResource EqualityConverter},
+                                             ConverterParameter=Ready}"
+                                         Spacing="28" HorizontalOptions="Center">
+
+                        <!-- Big emoji icon -->
+                        <Border WidthRequest="120" HeightRequest="120"
+                                StrokeShape="RoundRectangle 60"
+                                StrokeThickness="0"
+                                HorizontalOptions="Center"
+                                Margin="0,24,0,0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="{Binding GradientStart, FallbackValue={StaticResource AccentPrimaryLight}}" Offset="0"/>
+                                    <GradientStop Color="{Binding GradientEnd, FallbackValue={StaticResource AccentSubtle}}"   Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Label Text="{Binding ExerciseEmoji}"
+                                   FontSize="52"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                            <Label Text="{Binding ExerciseTitle}"
+                                   Style="{StaticResource SectionHeading}"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding PhaseInstruction}"
+                                   Style="{StaticResource BodyText}"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                        <!-- Duration chip -->
+                        <Border StrokeShape="RoundRectangle 20"
+                                Stroke="{StaticResource AccentSubtle}"
+                                StrokeThickness="1.5"
+                                Padding="20,10"
+                                BackgroundColor="#F0F7FF"
+                                HorizontalOptions="Center">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="⏱" FontSize="16" VerticalOptions="Center"/>
+                                <Label FontFamily="DMSansMedium" FontSize="15"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       VerticalOptions="Center">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} min session">
+                                            <Binding Path="Exercise.DurationMinutes"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </HorizontalStackLayout>
+                        </Border>
+
+                        <Button Text="Begin Session"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding BeginCommand}"
+                                HorizontalOptions="Fill"
+                                Margin="0,8,0,0"/>
+                    </VerticalStackLayout>
+
+                    <!-- ════════════════════════════════════════════════
+                         PHASE: ACTIVE
+                         ════════════════════════════════════════════════ -->
+                    <VerticalStackLayout IsVisible="{Binding Phase,
+                                             Converter={StaticResource EqualityConverter},
+                                             ConverterParameter=Active}"
+                                         Spacing="20" HorizontalOptions="Center">
+
+                        <Label Text="{Binding CountdownDisplay}"
+                               Style="{StaticResource StatNumber}"
+                               FontSize="52"
+                               HorizontalOptions="Center"
+                               Margin="0,24,0,0"/>
+
+                        <Label Text="remaining"
+                               Style="{StaticResource CaptionText}"
+                               HorizontalOptions="Center"
+                               Margin="0,-14,0,0"/>
+
+                        <Grid WidthRequest="240"
+                              HeightRequest="240"
+                              HorizontalOptions="Center">
+                            <Border WidthRequest="240"
+                                    HeightRequest="240"
+                                    StrokeShape="RoundRectangle 120"
+                                    Stroke="{StaticResource AccentSubtle}"
+                                    StrokeThickness="14"
+                                    BackgroundColor="#60DBEAFE"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
+
+                            <Border x:Name="BreathingAnimationHost"
+                                    WidthRequest="210"
+                                    HeightRequest="210"
+                                    StrokeThickness="0"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    Scale="0.88">
+                                <controls:AnatomicalLungView WidthRequest="210"
+                                                              HeightRequest="210"
+                                                              BreathProgress="{Binding BreathProgress}"
+                                                              HorizontalOptions="Center"
+                                                              VerticalOptions="Center"/>
+                            </Border>
+                        </Grid>
+
+                        <!-- Breath phase label -->
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <Label Text="{Binding BreathLabel}"
+                                   FontFamily="DMSansSemiBold" FontSize="18"
+                                   TextColor="{StaticResource AccentPrimary}"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding BreathPhaseSeconds, StringFormat='{0}s'}"
+                                   Style="{StaticResource CaptionText}"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+                        <!-- Overall progress bar -->
+                        <Border StrokeShape="RoundRectangle 6"
+                                BackgroundColor="{StaticResource AccentSubtle}"
+                                HeightRequest="6"
+                                HorizontalOptions="Fill"
+                                Margin="0,8,0,0">
+                            <BoxView x:Name="ProgressFill"
+                                     BackgroundColor="{StaticResource AccentPrimary}"
+                                     HeightRequest="6"
+                                     HorizontalOptions="Start"
+                                     CornerRadius="6"/>
+                        </Border>
+
+                        <Button Text="End Session Early"
+                                Style="{StaticResource OutlineButton}"
+                                Command="{Binding EndEarlyCommand}"
+                                HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+
+                    <!-- ════════════════════════════════════════════════
+                         PHASE: DONE
+                         ════════════════════════════════════════════════ -->
+                    <VerticalStackLayout IsVisible="{Binding Phase,
+                                             Converter={StaticResource EqualityConverter},
+                                             ConverterParameter=Done}"
+                                         Spacing="24" HorizontalOptions="Center">
+
+                        <!-- Celebration emoji circle -->
+                        <Border WidthRequest="140" HeightRequest="140"
+                                StrokeShape="RoundRectangle 70"
+                                StrokeThickness="3"
+                                Stroke="{StaticResource AccentPrimaryLight}"
+                                HorizontalOptions="Center"
+                                Margin="0,32,0,0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#DBEAFE" Offset="0"/>
+                                    <GradientStop Color="#EFF6FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.Shadow>
+                                <Shadow Brush="#2563EB" Offset="0,8" Radius="24" Opacity="0.18"/>
+                            </Border.Shadow>
+                            <Label Text="🎉" FontSize="62"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+                            <Label Text="{Binding CompletionTitle}"
+                                   Style="{StaticResource SectionHeading}"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding CompletionMessage}"
+                                   Style="{StaticResource BodyText}"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                        <!-- Summary card -->
+                        <Border StrokeShape="RoundRectangle 20"
+                                Stroke="{StaticResource CardBorderColor}"
+                                StrokeThickness="1"
+                                Padding="20,16"
+                                HorizontalOptions="Fill">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                    <GradientStop Color="#99FFFFFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.Shadow>
+                                <Shadow Brush="#2563EB" Offset="0,4" Radius="16" Opacity="0.08"/>
+                            </Border.Shadow>
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="12">
+                                <!-- Exercise name -->
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="2">
+                                    <Label Text="EXERCISE" Style="{StaticResource SectionLabel}"/>
+                                    <Label Text="{Binding ExerciseTitle}"
+                                           FontFamily="DMSansSemiBold" FontSize="14"
+                                           TextColor="{StaticResource TextPrimary}"/>
+                                </VerticalStackLayout>
+                                <!-- Duration -->
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="2">
+                                    <Label Text="TIME SPENT" Style="{StaticResource SectionLabel}"/>
+                                    <Label Text="{Binding CountdownDisplay}"
+                                           FontFamily="DMSansSemiBold" FontSize="14"
+                                           TextColor="{StaticResource TextPrimary}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <Button Text="Done — Back to Exercises"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding DoneCommand}"
+                                HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

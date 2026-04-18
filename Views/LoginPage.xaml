@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:M1ndLink.ViewModels"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             x:Class="M1ndLink.Views.LoginPage"
+             Title="Login">
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <!-- Subtle decorative circles for calm visual interest -->
+        <Grid ZIndex="1" InputTransparent="True">
+            <Ellipse WidthRequest="280" HeightRequest="280" Fill="#1A93C5FD" HorizontalOptions="Start" VerticalOptions="Start" Margin="-140,-140,0,0"/>
+            <Ellipse WidthRequest="200" HeightRequest="200" Fill="#15DBEAFE" HorizontalOptions="End" VerticalOptions="End" Margin="0,0,-100,-100"/>
+            <Ellipse WidthRequest="150" HeightRequest="150" Fill="#12BFDBFE" HorizontalOptions="End" VerticalOptions="Start" Margin="0,-75,-75,0"/>
+        </Grid>
+
+        <ScrollView ZIndex="2">
+            <VerticalStackLayout Padding="32,0" Spacing="0" VerticalOptions="Center" MinimumHeightRequest="700">
+                
+                <!-- Logo and App Name -->
+                <VerticalStackLayout Spacing="16" Margin="0,60,0,0" HorizontalOptions="Center">
+                    <Border WidthRequest="80" HeightRequest="80" StrokeThickness="0" BackgroundColor="#F0F7FF" StrokeShape="RoundRectangle 24" HorizontalOptions="Center">
+                        <Border.Shadow>
+                            <Shadow Brush="#1A2563EB" Offset="0,4" Radius="16" Opacity="0.15"/>
+                        </Border.Shadow>
+                        <Image x:Name="LogoImage" Source="appiconfg.png" Aspect="AspectFit" HorizontalOptions="Fill" VerticalOptions="Fill" Margin="8"/>
+                    </Border>
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label x:Name="AppNameLabel" Text="MindLink" FontFamily="SyneBold" FontSize="36" TextColor="#1E293B" HorizontalOptions="Center"/>
+                        <Label Text="Your wellness companion" FontFamily="JakartaRegular" FontSize="15" TextColor="#64748B" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Auth Card -->
+                <Border Margin="0,48,0,0" StrokeThickness="0" BackgroundColor="#FEFFFFFF" StrokeShape="RoundRectangle 28" Padding="32,36">
+                    <Border.Shadow>
+                        <Shadow Brush="#15334155" Offset="0,8" Radius="32" Opacity="0.12"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="24">
+                        
+                        <!-- Welcome Message -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Welcome back" FontFamily="SyneBold" FontSize="28" TextColor="#0F172A" HorizontalOptions="Center"/>
+                            <Label Text="Sign in to continue" FontFamily="JakartaRegular" FontSize="14" TextColor="#64748B" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+                        <!-- Input Fields -->
+                        <VerticalStackLayout Spacing="20">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Email" FontFamily="DMSansSemiBold" FontSize="13" TextColor="#475569"/>
+                                <Border Style="{StaticResource InputBorder}" HeightRequest="56" Padding="18,0">
+                                    <Entry Text="{Binding Email}" TextColor="Black" Placeholder="your@email.com" PlaceholderColor="#94A3B8" Keyboard="Email"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="Password" FontFamily="DMSansSemiBold" FontSize="13" TextColor="#475569"/>
+                                    <Label Grid.Column="1" Text="Forgot?" FontFamily="DMSansSemiBold" FontSize="13" TextColor="#3B82F6">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                                <Border Style="{StaticResource InputBorder}" HeightRequest="56" Padding="18,0">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <Entry x:Name="PasswordEntry" Text="{Binding Password}" TextColor="Black" Placeholder="••••••••" PlaceholderColor="#94A3B8" IsPassword="True"/>
+                                        <Label x:Name="EyeIcon" Grid.Column="1" Text="Show" FontFamily="DMSansSemiBold" FontSize="12" TextColor="#64748B" VerticalOptions="Center">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnTogglePasswordClicked"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+
+                        <Button x:Name="LoginButton" Text="Sign In" Command="{Binding LoginCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource PrimaryButton}" HeightRequest="56" Margin="0,8,0,0"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Register Link -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0,32,0,60">
+                    <Label Text="New to MindLink?" FontFamily="JakartaRegular" FontSize="14" TextColor="#64748B" VerticalOptions="Center"/>
+                    <Label Text="Create account" FontFamily="DMSansBold" FontSize="14" TextColor="#2563EB" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToSignUpCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid IsVisible="{Binding IsBusy}" BackgroundColor="#880F172A" InputTransparent="False" ZIndex="3">
+            <Border Padding="26" StrokeShape="RoundRectangle 28" StrokeThickness="0" BackgroundColor="{StaticResource SurfaceElevated}" HorizontalOptions="Center" VerticalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="#332563EB" Offset="0,14" Radius="30" Opacity="0.35"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
+                    <controls:AnimatedLogoView/>
+                    <Label Text="Signing you in securely..." Style="{StaticResource BodyText}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

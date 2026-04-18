@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.GeneralSettingsPage"
+             x:DataType="vm:GeneralSettingsViewModel">
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+        <ScrollView ZIndex="1">
+            <VerticalStackLayout Padding="20,52,20,40" Spacing="20">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Label Text="←" FontSize="22" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="General Settings" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Manage notifications, appearance, exports, and account preferences." Style="{StaticResource BodyText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Border StrokeShape="RoundRectangle 24" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><SolidColorBrush Color="{StaticResource SurfaceCard}"/></Border.Background>
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Notifications" Style="{StaticResource SectionHeading}"/>
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Daily notifications" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Turn all regular reminder prompts on or off." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                            <controls:CustomToggle Grid.Column="1" IsToggled="{Binding DailyNotifications}" WidthRequest="52" HeightRequest="30" VerticalOptions="Center"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Morning check-in" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Prompt yourself to log how you feel earlier in the day." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                            <controls:CustomToggle Grid.Column="1" IsToggled="{Binding MorningReminderEnabled}" IsEnabled="{Binding DailyNotifications}" WidthRequest="52" HeightRequest="30" VerticalOptions="Center"/>
+                        </Grid>
+                        <TimePicker Time="{Binding MorningReminderTime}" IsEnabled="{Binding DailyNotifications}" TextColor="{StaticResource TextPrimary}"/>
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Evening reflection" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Remember to end the day with a note or reflection." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                            <controls:CustomToggle Grid.Column="1" IsToggled="{Binding EveningReminderEnabled}" IsEnabled="{Binding DailyNotifications}" WidthRequest="52" HeightRequest="30" VerticalOptions="Center"/>
+                        </Grid>
+                        <TimePicker Time="{Binding EveningReminderTime}" IsEnabled="{Binding DailyNotifications}" TextColor="{StaticResource TextPrimary}"/>
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Streak recovery" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Warn you when your check-in habit is slipping." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                            <controls:CustomToggle Grid.Column="1" IsToggled="{Binding StreakReminderEnabled}" IsEnabled="{Binding DailyNotifications}" WidthRequest="52" HeightRequest="30" VerticalOptions="Center"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Exercise suggestions" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Suggest a breathing break on high-pressure days." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                            <controls:CustomToggle Grid.Column="1" IsToggled="{Binding ExerciseSuggestionEnabled}" IsEnabled="{Binding DailyNotifications}" WidthRequest="52" HeightRequest="30" VerticalOptions="Center"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 24" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><SolidColorBrush Color="{StaticResource SurfaceCard}"/></Border.Background>
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Appearance" Style="{StaticResource SectionHeading}"/>
+                        <Label Text="Theme" Style="{StaticResource CardTitle}"/>
+                        <Picker ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding SelectedTheme}" Title="Choose theme"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 24" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><SolidColorBrush Color="{StaticResource SurfaceCard}"/></Border.Background>
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Data Management" Style="{StaticResource SectionHeading}"/>
+                        <Label Text="Export Data" Style="{StaticResource CardTitle}"/>
+                        <Label Text="{Binding ExportStatus}" Style="{StaticResource BodyText}"/>
+                        <Button Text="Export to JSON" Style="{StaticResource OutlineButton}" Command="{Binding ExportDataCommand}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 24" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><SolidColorBrush Color="{StaticResource SurfaceCard}"/></Border.Background>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Account" Style="{StaticResource SectionHeading}"/>
+                        <Label Text="Signed in email" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{Binding AccountEmail}" Style="{StaticResource CardTitle}"/>
+                        <Label Text="Version" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{Binding AppVersion}" Style="{StaticResource BodyText}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button Text="Save Settings" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

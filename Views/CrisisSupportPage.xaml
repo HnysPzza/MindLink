@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.CrisisSupportPage"
+             x:DataType="vm:CrisisSupportViewModel">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FEE2E2" Offset="0"/>
+                        <GradientStop Color="#00FEE2E2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Text="←"
+                           FontSize="22"
+                           TextColor="#DC2626"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" Spacing="2">
+                        <Label Text="Crisis Support" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Immediate help, grounding, and trusted contacts." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20,4,20,40" Spacing="20">
+                    <Border StrokeShape="RoundRectangle 24" Stroke="#FCA5A5" StrokeThickness="1.5" Padding="20" BackgroundColor="#FEF2F2">
+                        <Border.Shadow>
+                            <Shadow Brush="#DC2626" Offset="0,6" Radius="20" Opacity="0.12"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="If you are in immediate danger, call emergency services now." FontFamily="DMSansBold" FontSize="18" TextColor="#991B1B"/>
+                            <Label Text="You do not have to go through this alone. Reach a trusted person or crisis line right away." Style="{StaticResource BodyText}"/>
+                            <Button Text="Call Emergency Services"
+                                    Style="{StaticResource DangerButton}"
+                                    SemanticProperties.Description="Calls local emergency services immediately"
+                                    Command="{Binding CallResourceCommand}"
+                                    CommandParameter="{Binding CrisisResources[3]}"/>
+                            <Button Text="Text Crisis Line for Emotional Support"
+                                    Style="{StaticResource OutlineButton}"
+                                    SemanticProperties.Description="Opens your messaging app to text a free, 24/7 crisis counselor."
+                                    Command="{Binding TextResourceCommand}"
+                                    CommandParameter="{Binding CrisisResources[4]}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border StrokeShape="RoundRectangle 22" Stroke="#60A5FA" StrokeThickness="1.5" Padding="20">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#EFF6FF" Offset="0"/>
+                                <GradientStop Color="#DBEAFE" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="My Safety Plan" FontFamily="DMSansBold" FontSize="18" TextColor="#1E3A8A"/>
+                            <Label Text="A personalized, step-by-step crisis plan outlining your triggers, safe spaces, and immediate coping strategies." Style="{StaticResource BodyText}"/>
+                            <Button Text="Open Safety Plan"
+                                    Style="{StaticResource PrimaryButton}"
+                                    SemanticProperties.Hint="Opens your custom Safety Plan builder"
+                                    Command="{Binding OpenSafetyPlanCommand}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Label Text="Emergency Contacts" Style="{StaticResource SectionHeading}"/>
+                    <Border StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#F8FBFF" Offset="0"/>
+                                <GradientStop Color="#EEF4FB" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Spacing="14">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Import from your contacts" FontFamily="SyneBold" FontSize="22" TextColor="Black"/>
+                                    <Label Text="Browse every saved device contact with a phone number, then import one into your emergency list." Style="{StaticResource BodyText}"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="Choose Contact" Style="{StaticResource OutlineButton}" SemanticProperties.Hint="Opens your device contacts list" Command="{Binding PickDeviceContactCommand}" VerticalOptions="Start"/>
+                            </Grid>
+
+                            <Border IsVisible="{Binding IsPickingDeviceContact}" Stroke="#BFDBFE" StrokeThickness="1" BackgroundColor="#F8FBFF" StrokeShape="RoundRectangle 20" Padding="16">
+                                <VerticalStackLayout Spacing="12">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="Available contacts" FontFamily="DMSansBold" FontSize="16" TextColor="Black"/>
+                                            <Label Text="Tap a contact to fill the form below." Style="{StaticResource CaptionText}"/>
+                                        </VerticalStackLayout>
+                                        <Button Grid.Column="1" Text="Close" Style="{StaticResource OutlineButton}" Command="{Binding CancelDeviceContactPickerCommand}" HeightRequest="40" WidthRequest="88"/>
+                                    </Grid>
+
+                                    <Border Style="{StaticResource InputBorder}" HeightRequest="52" Padding="16,0">
+                                        <Entry Text="{Binding DeviceContactSearchText}" Placeholder="Search contacts by name or number" PlaceholderColor="#64748B"/>
+                                    </Border>
+
+                                    <CollectionView ItemsSource="{Binding FilteredDeviceContacts}" HeightRequest="260" SelectionMode="None">
+                                        <CollectionView.EmptyView>
+                                            <Label Text="No contacts match your search." Style="{StaticResource BodyText}" HorizontalTextAlignment="Center" Margin="0,20,0,0"/>
+                                        </CollectionView.EmptyView>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="models:DeviceContactOption">
+                                                <Border Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 18" Padding="14" Margin="0,0,0,10">
+                                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                                        <Border WidthRequest="42" HeightRequest="42" StrokeThickness="0" BackgroundColor="#DBEAFE" StrokeShape="RoundRectangle 21">
+                                                            <Label Text="{Binding DisplayName, StringFormat='{0:0}'}" IsVisible="False"/>
+                                                            <Label Text="•" FontSize="16" TextColor="#2563EB" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                        </Border>
+                                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                            <Label Text="{Binding DisplayName}" FontFamily="DMSansSemiBold" FontSize="14" TextColor="Black"/>
+                                                            <Label Text="{Binding PhoneNumber}" Style="{StaticResource BodyText}"/>
+                                                        </VerticalStackLayout>
+                                                        <Button Grid.Column="2" Text="Use" Style="{StaticResource OutlineButton}"
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CrisisSupportViewModel}}, Path=SelectDeviceContactCommand}"
+                                                                CommandParameter="{Binding .}" HeightRequest="40" WidthRequest="76" VerticalOptions="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding EmergencyContacts}" IsVisible="{Binding HasContacts}" Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:EmergencyContact">
+                                <Border StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#FDFEFF" Offset="0"/>
+                                            <GradientStop Color="#EEF4FB" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="56,*,Auto" ColumnSpacing="14" RowSpacing="14">
+                                        <Border Grid.RowSpan="2" Grid.Column="0" WidthRequest="52" HeightRequest="52" StrokeShape="RoundRectangle 26" StrokeThickness="0" BackgroundColor="#FEE2E2">
+                                            <Label Text="{Binding Initials}" FontFamily="DMSansBold" FontSize="16" TextColor="#B91C1C" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                            <HorizontalStackLayout Spacing="6">
+                                                <Label Text="{Binding Name}" Style="{StaticResource CardTitle}"/>
+                                                <Border IsVisible="{Binding IsPrimary}" StrokeThickness="0" BackgroundColor="#FEE2E2" Padding="8,2" StrokeShape="RoundRectangle 10">
+                                                    <Label Text="Primary" FontFamily="DMSansMedium" FontSize="11" TextColor="#B91C1C"/>
+                                                </Border>
+                                            </HorizontalStackLayout>
+                                            <Label Text="{Binding Relationship}" Style="{StaticResource CaptionText}"/>
+                                            <Label Text="{Binding PhoneNumber}" Style="{StaticResource BodyText}"/>
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2" Text="Remove" FontFamily="DMSansMedium" FontSize="12" TextColor="#DC2626" HorizontalTextAlignment="Center" VerticalOptions="Start">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CrisisSupportViewModel}}, Path=DeleteContactCommand}" CommandParameter="{Binding .}"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ColumnDefinitions="*,12,*">
+                                            <Button Grid.Column="0" Text="Call" Style="{StaticResource DangerButton}" SemanticProperties.Description="Calls this emergency contact immediately" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CrisisSupportViewModel}}, Path=CallContactCommand}" CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="2" Text="Text" Style="{StaticResource OutlineButton}" SemanticProperties.Description="Texts this emergency contact" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CrisisSupportViewModel}}, Path=TextContactCommand}" CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <Border IsVisible="{Binding HasContacts, Converter={StaticResource InverseBoolConverter}}" StrokeShape="RoundRectangle 18" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                        <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                        <Label Text="Add a trusted contact so you can call or text them quickly in stressful moments." Style="{StaticResource BodyText}" HorizontalTextAlignment="Center"/>
+                    </Border>
+
+                    <Border StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#FDFEFF" Offset="0"/>
+                                <GradientStop Color="#EEF4FB" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Spacing="14">
+                            <Label Text="Add Emergency Contact" Style="{StaticResource CardTitle}"/>
+                            <Label Text="Create a calm, ready-to-use support list with one primary contact and quick actions." Style="{StaticResource BodyText}"/>
+                            <Grid ColumnDefinitions="*,12,*">
+                                <Border Grid.Column="0" Style="{StaticResource InputBorder}" HeightRequest="52" Padding="16,0">
+                                    <Entry Text="{Binding NewContactName}" Placeholder="Name" PlaceholderColor="#64748B"/>
+                                </Border>
+                                <Border Grid.Column="2" Style="{StaticResource InputBorder}" HeightRequest="52" Padding="16,0">
+                                    <Entry Text="{Binding NewContactRelationship}" Placeholder="Relationship" PlaceholderColor="#64748B"/>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource InputBorder}" HeightRequest="52" Padding="16,0">
+                                <Entry Text="{Binding NewContactPhoneNumber}" Placeholder="Phone number" PlaceholderColor="#64748B" Keyboard="Telephone"/>
+                            </Border>
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <Label Text="Set as primary contact" Style="{StaticResource BodyText}"/>
+                                <controls:CustomToggle Grid.Column="1" IsToggled="{Binding NewContactIsPrimary}" WidthRequest="52" HeightRequest="30" VerticalOptions="Center"/>
+                            </Grid>
+                            <Button Text="Save Contact" Style="{StaticResource PrimaryButton}" Command="{Binding SaveEmergencyContactCommand}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Label Text="Crisis Lines" Style="{StaticResource SectionHeading}"/>
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding CrisisResources}" Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:CrisisResource">
+                                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="16">
+                                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <VerticalStackLayout Spacing="3">
+                                            <Label Text="{Binding Name}" Style="{StaticResource CardTitle}"/>
+                                            <Label Text="{Binding Description}" Style="{StaticResource BodyText}"/>
+                                            <Label Text="{Binding Region}" Style="{StaticResource CaptionText}"/>
+                                            <Label Text="{Binding Availability}" Style="{StaticResource CaptionText}"/>
+                                            <Label Text="{Binding PhoneNumber}" FontFamily="DMSansMedium" FontSize="14" TextColor="#B91C1C"/>
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                            <Button Text="Call" Style="{StaticResource DangerButton}"
+                                                    IsVisible="{Binding HasPhone}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CrisisSupportViewModel}}, Path=CallResourceCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Text="Text" Style="{StaticResource OutlineButton}"
+                                                    IsVisible="{Binding HasSms}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CrisisSupportViewModel}}, Path=TextResourceCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <Label Text="Quick Grounding" Style="{StaticResource SectionHeading}"/>
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding GroundingSteps}" Spacing="10">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:GroundingStep">
+                                <Border StrokeShape="RoundRectangle 18" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="16">
+                                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="{Binding Title}" Style="{StaticResource CardTitle}"/>
+                                        <Label Text="{Binding Prompt}" Style="{StaticResource BodyText}"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

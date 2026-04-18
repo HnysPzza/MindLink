@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.OnboardingPage"
+             x:DataType="vm:OnboardingViewModel"
+             Shell.NavBarIsVisible="False">
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" Padding="20,52,20,28" RowDefinitions="Auto,*,Auto" RowSpacing="18">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="MindLink" FontFamily="SyneBold" FontSize="28" TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="A calmer way to care for your mind." Style="{StaticResource BodyText}"/>
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="Skip" Style="{StaticResource OutlineButton}" WidthRequest="88" Command="{Binding SkipCommand}"/>
+            </Grid>
+
+            <CarouselView Grid.Row="1" ItemsSource="{Binding Cards}" Position="{Binding CurrentIndex, Mode=TwoWay}">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="models:OnboardingCard">
+                        <Grid Padding="0,8">
+                            <Border StrokeShape="RoundRectangle 28" StrokeThickness="0" Padding="24">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="{Binding GradientStart}" Offset="0"/>
+                                        <GradientStop Color="{Binding GradientEnd}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border.Shadow>
+                                    <Shadow Brush="#402563EB" Offset="0,14" Radius="32" Opacity="0.45"/>
+                                </Border.Shadow>
+                                <Grid RowDefinitions="Auto,*,Auto" RowSpacing="18">
+                                    <Border WidthRequest="84" HeightRequest="84" BackgroundColor="#22FFFFFF" StrokeThickness="0" StrokeShape="RoundRectangle 28">
+                                        <Label Text="{Binding Icon}" FontSize="38" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Row="1" Spacing="12" VerticalOptions="Center">
+                                        <Label Text="{Binding AccentLabel}" FontFamily="JakartaSemiBold" FontSize="12" TextColor="#DDEAFE" CharacterSpacing="1.4" TextTransform="Uppercase"/>
+                                        <Label Text="{Binding Title}" FontFamily="SyneBold" FontSize="30" TextColor="White"/>
+                                        <Label Text="{Binding Description}" FontFamily="JakartaRegular" FontSize="15" TextColor="#EAF2FF" LineHeight="1.3"/>
+                                    </VerticalStackLayout>
+
+                                    <Border Grid.Row="2" StrokeThickness="0" BackgroundColor="#18FFFFFF" StrokeShape="RoundRectangle 18" Padding="16,14">
+                                        <Label Text="Swipe to explore how MindLink supports your daily check-ins, calmer breathing, and emergency readiness." FontFamily="JakartaRegular" FontSize="13" TextColor="White"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+
+            <VerticalStackLayout Grid.Row="2" Spacing="18">
+                <IndicatorView HorizontalOptions="Center" IndicatorColor="#99B9D8" SelectedIndicatorColor="{StaticResource AccentPrimary}" ItemsSource="{Binding Cards}" Position="{Binding CurrentIndex}"/>
+                <Button Text="{Binding PrimaryActionText}" Style="{StaticResource PrimaryButton}" Command="{Binding AdvanceCommand}"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

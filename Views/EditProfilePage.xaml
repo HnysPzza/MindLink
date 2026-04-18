@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.EditProfilePage"
+             x:DataType="vm:EditProfileViewModel"
+             Title="Edit Profile">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+        <ScrollView ZIndex="1">
+            <VerticalStackLayout Padding="20,52,20,48" Spacing="28">
+
+                <!-- Back -->
+                <HorizontalStackLayout>
+                    <Label Text="← Back" FontFamily="DMSansMedium" FontSize="15"
+                           TextColor="{StaticResource AccentPrimary}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+                <Label Text="Edit Profile" Style="{StaticResource DisplayHeading}"/>
+
+                <!-- Avatar picker -->
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="14">
+                    <Grid HorizontalOptions="Center">
+                        <!-- Avatar image or placeholder -->
+                        <Border WidthRequest="110" HeightRequest="110"
+                                StrokeShape="RoundRectangle 55"
+                                StrokeThickness="3"
+                                Stroke="{StaticResource AccentPrimaryLight}"
+                                BackgroundColor="{StaticResource AccentSubtle}">
+
+                            <!-- Placeholder shown when no avatar -->
+                            <Label Text="👤" FontSize="52"
+                                   HorizontalOptions="Center" VerticalOptions="Center"
+                                   IsVisible="{Binding HasAvatar, Converter={StaticResource InverseBoolConverter}}"/>
+
+                            <!-- Actual photo -->
+                            <Image Source="{Binding AvatarSource}"
+                                   Aspect="AspectFill"
+                                   IsVisible="{Binding HasAvatar}"/>
+                        </Border>
+
+                        <!-- Camera overlay button -->
+                        <Border WidthRequest="36" HeightRequest="36"
+                                StrokeShape="RoundRectangle 18"
+                                BackgroundColor="{StaticResource AccentPrimary}"
+                                StrokeThickness="0"
+                                HorizontalOptions="End" VerticalOptions="End"
+                                Margin="0,0,0,0">
+                            <Border.Shadow>
+                                <Shadow Brush="#2563EB" Offset="0,3" Radius="8" Opacity="0.35"/>
+                            </Border.Shadow>
+                            <Label Text="📷" FontSize="16"
+                                   HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ChoosePhotoSourceCommand}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Border>
+                    </Grid>
+
+                    <Label Text="Tap the camera to change photo"
+                           Style="{StaticResource CaptionText}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Form fields -->
+                <Border StrokeShape="RoundRectangle 20"
+                        Stroke="{StaticResource CardBorderColor}" StrokeThickness="1"
+                        Padding="20">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                            <GradientStop Color="#99FFFFFF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#2563EB" Offset="0,4" Radius="18" Opacity="0.07"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="20">
+
+                        <!-- Name field -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="DISPLAY NAME" Style="{StaticResource SectionLabel}"/>
+                            <Border StrokeShape="RoundRectangle 12"
+                                    StrokeThickness="1.5"
+                                    Stroke="{StaticResource AccentSubtle}"
+                                    Padding="14,10"
+                                    BackgroundColor="#F0F7FF">
+                                <Entry Text="{Binding Name}"
+                                       FontFamily="DMSansMedium"
+                                       FontSize="16"
+                                       TextColor="Black"
+                                       PlaceholderColor="#94A3B8"
+                                       Placeholder="Enter your name"
+                                       ReturnType="Next"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <BoxView HeightRequest="1" BackgroundColor="{StaticResource Divider}"/>
+
+                        <!-- Goal field -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="PERSONAL GOAL" Style="{StaticResource SectionLabel}"/>
+                            <Border StrokeShape="RoundRectangle 12"
+                                    StrokeThickness="1.5"
+                                    Stroke="{StaticResource AccentSubtle}"
+                                    Padding="14,10"
+                                    BackgroundColor="#F0F7FF">
+                                <Editor Text="{Binding PersonalGoal}"
+                                        FontFamily="JakartaRegular"
+                                        FontSize="14"
+                                        TextColor="Black"
+                                        PlaceholderColor="#94A3B8"
+                                        Placeholder="e.g. Feel calmer every day"
+                                        AutoSize="TextChanges"
+                                        MinimumHeightRequest="60"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Save -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource PrimaryBlue}" HorizontalOptions="Center" Margin="0,0,0,8"/>
+
+                <Button Text="Save Changes"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsNotBusy}"/>
+
+                <!-- Photo buttons -->
+                <Grid ColumnDefinitions="*,12,*">
+                    <Button Grid.Column="0" Text="📷  Camera"
+                            Style="{StaticResource OutlineButton}"
+                            Command="{Binding TakePhotoCommand}"/>
+                    <Button Grid.Column="2" Text="🖼️  Gallery"
+                            Style="{StaticResource OutlineButton}"
+                            Command="{Binding PickPhotoCommand}"/>
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

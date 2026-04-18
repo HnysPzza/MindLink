@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="M1ndLink.Views.HabitsPage"
+             x:DataType="vm:HabitsViewModel"
+             x:Name="HabitsPageRoot"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*,Auto">
+            <!-- Header -->
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#E0F2FE" Offset="0"/>
+                        <GradientStop Color="#00E0F2FE" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Label Grid.Column="0" Text="←" FontSize="22" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0">
+                        <Label Text="My Habits" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Small steps every day." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2" Text="+" FontSize="32" TextColor="{StaticResource AccentPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowAddHabitCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+
+            <!-- List -->
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Habits}" Margin="20,8,20,20">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:HabitItemViewModel">
+                        <Border Style="{StaticResource CardBorder}" Margin="0,0,0,12" Padding="16">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="{Binding Habit.Icon}" FontSize="28" VerticalOptions="Center" Margin="0,0,16,0" />
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <Label Text="{Binding Habit.Name}" FontSize="16" FontFamily="SyneBold" TextColor="{StaticResource TextPrimary}" />
+                                    <Label Text="{Binding Habit.CurrentStreak, StringFormat='Streak: {0} 🔥'}" FontSize="12" FontFamily="JakartaRegular" TextColor="{StaticResource TextMuted}" />
+                                </VerticalStackLayout>
+                                <CheckBox Grid.Column="2" IsChecked="{Binding IsCompletedToday, Mode=OneWay}" Color="{StaticResource AccentPrimary}" VerticalOptions="Center" InputTransparent="True" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <!-- Handled in code-behind to avoid CollectionView virtualization binding issues -->
+                                <TapGestureRecognizer Tapped="OnHabitTapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="40" Spacing="16" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="🌱" FontSize="48" HorizontalOptions="Center"/>
+                        <Label Text="No habits planted yet" Style="{StaticResource SectionHeading}" HorizontalOptions="Center"/>
+                        <Label Text="Tap the + above to start tracking your daily wellness habits." Style="{StaticResource BodyText}" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <!-- Add Habit Popup overlay -->
+            <Grid Grid.Row="0" Grid.RowSpan="3" BackgroundColor="#80000000" IsVisible="{Binding IsAddHabitVisible}" ZIndex="10">
+                <Border Style="{StaticResource CardBorder}" Margin="24" Padding="20" BackgroundColor="{StaticResource CardBackground}" VerticalOptions="Center">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Create New Habit" Style="{StaticResource SectionHeading}"/>
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Border Grid.Column="0" Style="{StaticResource InputBorder}" Padding="12,0" Margin="0,0,12,0">
+                                <Entry Text="{Binding NewHabitIcon}" WidthRequest="40" HorizontalTextAlignment="Center" FontSize="20"/>
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource InputBorder}" Padding="12,0">
+                                <Entry Text="{Binding NewHabitName}" Placeholder="e.g. Drink Water" BackgroundColor="Transparent" TextColor="{StaticResource TextPrimary}"/>
+                            </Border>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,*">
+                            <Button Grid.Column="0" Text="Cancel" BackgroundColor="Transparent" TextColor="{StaticResource TextMuted}" Command="{Binding CancelAddHabitCommand}"/>
+                            <Button Grid.Column="1" Text="Save" Style="{StaticResource PrimaryButton}" Command="{Binding SaveHabitCommand}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.MoodJournalPage"
+             x:DataType="vm:MoodJournalViewModel">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+
+            <!-- ── Sticky Header ── -->
+            <Border Grid.Row="0"
+                    StrokeThickness="0"
+                    Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#EAEFF6FF" Offset="0"/>
+                        <GradientStop Color="#00EFF6FF"  Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Text="←" FontSize="22"
+                           TextColor="{StaticResource AccentPrimary}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" Spacing="1" VerticalOptions="Center">
+                        <Label Text="Mood Journal"
+                               Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Your daily check-ins, in one place."
+                               Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ── Content ── -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20,4,20,48" Spacing="0">
+                    <!-- Monthly Chart -->
+                    <Border StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource CardBorderColor}"
+                            StrokeThickness="1"
+                            Padding="20"
+                            Margin="0,0,0,20"
+                            IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBoolConverter}}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                <GradientStop Color="#B3FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow>
+                            <Shadow Brush="#2563EB" Offset="0,4" Radius="18" Opacity="0.08"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="16">
+                            <Label Text="Monthly Trends" Style="{StaticResource SectionHeading}"/>
+                            <controls:MoodLineChart Data="{Binding MoodChartData}" HeightRequest="120" HorizontalOptions="Fill"/>
+                            <Grid ColumnDefinitions="*,*">
+                                <Label Grid.Column="0" Text="Last 30 days" Style="{StaticResource CaptionText}"/>
+                                <Label Grid.Column="1" Text="1-5 scale" Style="{StaticResource CaptionText}" HorizontalTextAlignment="End"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Empty State -->
+                    <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                         HorizontalOptions="Center"
+                                         Spacing="14"
+                                         Margin="0,60,0,0">
+                        <Label Text="📓" FontSize="60" HorizontalOptions="Center"/>
+                        <Label Text="No Journal Entries Yet"
+                               Style="{StaticResource SectionHeading}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Start by logging today's mood&#10;and adding a note on the Home page."
+                               Style="{StaticResource BodyText}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+
+                    <!-- Entry List -->
+                    <VerticalStackLayout
+                        BindableLayout.ItemsSource="{Binding Entries}"
+                        IsVisible="{Binding IsEmpty,
+                            Converter={StaticResource InverseBoolConverter}}"
+                        Spacing="0">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:MoodEntry">
+                                <Grid Margin="0,12,0,0">
+                                    <Border StrokeShape="RoundRectangle 18"
+                                            Stroke="{StaticResource CardBorderColor}"
+                                            StrokeThickness="1"
+                                            Padding="0">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                                <GradientStop Color="#B3FFFFFF" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Border.Shadow>
+                                            <Shadow Brush="#2563EB" Offset="0,3" Radius="14" Opacity="0.07"/>
+                                        </Border.Shadow>
+
+                                        <Grid ColumnDefinitions="5,Auto,*" Padding="0,16,16,16">
+
+                                            <!-- Mood-level accent bar (color mapped in code-behind via converter) -->
+                                            <BoxView Grid.Column="0"
+                                                     BackgroundColor="{StaticResource AccentPrimary}"
+                                                     CornerRadius="0,3,3,0"/>
+
+                                            <!-- Emoji badge -->
+                                            <Border Grid.Column="1"
+                                                    WidthRequest="52" HeightRequest="52"
+                                                    StrokeShape="RoundRectangle 26"
+                                                    BackgroundColor="{StaticResource AccentSubtle}"
+                                                    StrokeThickness="0"
+                                                    Margin="14,0,4,0">
+                                                <Label Text="{Binding MoodEmoji}"
+                                                       FontSize="26"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+
+                                            <!-- Text -->
+                                            <VerticalStackLayout Grid.Column="2"
+                                                                 Spacing="3"
+                                                                 VerticalOptions="Center"
+                                                                 Margin="10,0,0,0">
+                                                <!-- Mood label + date on same row -->
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <Label Grid.Column="0"
+                                                           Text="{Binding MoodLabel}"
+                                                           FontFamily="DMSansSemiBold"
+                                                           FontSize="15"
+                                                           TextColor="{StaticResource TextPrimary}"/>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Date, StringFormat='{0:MMM d, yyyy}'}"
+                                                           Style="{StaticResource CaptionText}"
+                                                           VerticalOptions="Center"/>
+                                                </Grid>
+
+                                                <!-- Time -->
+                                                <Label Text="{Binding Date, StringFormat='{0:h:mm tt}'}"
+                                                       Style="{StaticResource CaptionText}"/>
+
+                                                <!-- Note (only shown if it has content) -->
+                                                <Border IsVisible="{Binding Notes,
+                                                            Converter={StaticResource StringNotEmptyConverter}}"
+                                                        StrokeShape="RoundRectangle 8"
+                                                        Stroke="{StaticResource AccentSubtle}"
+                                                        StrokeThickness="1"
+                                                        Padding="10,6"
+                                                        BackgroundColor="#F0F7FF"
+                                                        Margin="0,6,0,0">
+                                                    <Label Text="{Binding Notes}"
+                                                           FontFamily="JakartaRegular"
+                                                           FontSize="13"
+                                                           TextColor="{StaticResource TextSecondary}"
+                                                           LineBreakMode="WordWrap"
+                                                           MaxLines="4"/>
+                                                </Border>
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+        </Grid>
+    </Grid>
+</ContentPage>

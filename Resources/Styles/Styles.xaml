@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ===== TYPOGRAPHY ===== -->
+    <Style x:Key="DisplayHeading" TargetType="Label">
+        <Setter Property="FontFamily" Value="NunitoBold"/>
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style x:Key="SectionHeading" TargetType="Label">
+        <Setter Property="FontFamily" Value="DMSansBold"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style x:Key="CardTitle" TargetType="Label">
+        <Setter Property="FontFamily" Value="DMSansMedium"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style x:Key="BodyText" TargetType="Label">
+        <Setter Property="FontFamily" Value="JakartaRegular"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style x:Key="CaptionText" TargetType="Label">
+        <Setter Property="FontFamily" Value="JakartaRegular"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style x:Key="StatNumber" TargetType="Label">
+        <Setter Property="FontFamily" Value="SyneBold"/>
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="TextColor" Value="{StaticResource AccentPrimary}"/>
+    </Style>
+
+    <Style x:Key="SectionLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="JakartaSemiBold"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="CharacterSpacing" Value="1.5"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+    </Style>
+
+    <!-- ===== BUTTONS ===== -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="DMSansSemiBold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#2563EB" Offset="0"/>
+                    <GradientStop Color="#3B82F6" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="HeightRequest" Value="52"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#2563EB" Offset="0,6" Radius="16" Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="OutlineButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="DMSansMedium"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="BorderColor">
+            <Setter.Value>
+                <AppThemeBinding Light="{StaticResource AccentPrimaryLight}" Dark="#93C5FD"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="HeightRequest" Value="48"/>
+    </Style>
+
+    <Style x:Key="CardBorder" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Stroke" Value="#C9D6E5"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="BackgroundColor">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                    <GradientStop Color="#99FFFFFF" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#2563EB" Offset="0,4" Radius="18" Opacity="0.08"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="InputBorder" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="Stroke">
+            <Setter.Value>
+                <AppThemeBinding Light="{StaticResource Divider}" Dark="#33475A75"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="StrokeThickness" Value="1.5"/>
+        <Setter Property="BackgroundColor" Value="White"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#10233B53" Offset="0,6" Radius="16" Opacity="0.18"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup Name="CommonStates">
+                    <VisualState Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke">
+                                <Setter.Value>
+                                    <AppThemeBinding Light="{StaticResource Divider}" Dark="#33475A75"/>
+                                </Setter.Value>
+                            </Setter>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke" Value="{StaticResource PrimaryBlue}"/>
+                            <Setter Property="StrokeThickness" Value="2"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Entry">
+        <Setter Property="FontFamily" Value="JakartaRegular"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="PlaceholderColor" Value="#94A3B8"/>
+        <Setter Property="BackgroundColor" Value="White"/>
+    </Style>
+
+    <Style x:Key="PillButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="DMSansSemiBold"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource AccentPrimary}"/>
+        <Setter Property="CornerRadius" Value="999"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="Padding" Value="18,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#2563EB" Offset="0,4" Radius="10" Opacity="0.25"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DangerButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="DMSansSemiBold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#DC2626" Offset="0"/>
+                    <GradientStop Color="#EF4444" Offset="0.55"/>
+                    <GradientStop Color="#F87171" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Padding" Value="18,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#33DC2626" Offset="0,6" Radius="18" Opacity="0.28"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Picker">
+        <Setter Property="FontFamily" Value="JakartaRegular"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="TitleColor" Value="#94A3B8"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style TargetType="Editor">
+        <Setter Property="FontFamily" Value="JakartaRegular"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="PlaceholderColor" Value="#94A3B8"/>
+        <Setter Property="BackgroundColor" Value="White"/>
+    </Style>
+
+    <!-- ===== GLOBAL PAGE ===== -->
+    <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor">
+            <Setter.Value>
+                <AppThemeBinding Light="{StaticResource BgBase}" Dark="#020617"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.MeditationLibraryPage"
+             x:DataType="vm:MeditationLibraryViewModel">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+            <Border Grid.Row="0"
+                    StrokeThickness="0"
+                    Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#EAEFF6FF" Offset="0"/>
+                        <GradientStop Color="#00EFF6FF" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Text="←"
+                           FontSize="22"
+                           TextColor="{StaticResource AccentPrimary}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" Spacing="2">
+                        <Label Text="Meditation Library" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Guided sessions you can start any time." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20,4,20,40" Spacing="20">
+                    <Border StrokeShape="RoundRectangle 24"
+                            Stroke="{StaticResource AccentPrimaryLight}"
+                            StrokeThickness="1.5"
+                            Padding="20"
+                            BackgroundColor="#EAF4FF">
+                        <Border.Shadow>
+                            <Shadow Brush="#2563EB" Offset="0,6" Radius="20" Opacity="0.14"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="✨" FontSize="16"/>
+                                <Label Text="{Binding FeaturedReason}" Style="{StaticResource CaptionText}" TextColor="{StaticResource AccentPrimary}"/>
+                            </HorizontalStackLayout>
+                            <Grid ColumnDefinitions="70,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0" WidthRequest="62" HeightRequest="62" StrokeThickness="0" StrokeShape="RoundRectangle 20">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{Binding FeaturedMeditation.GradientStart}" Offset="0"/>
+                                            <GradientStop Color="{Binding FeaturedMeditation.GradientEnd}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Label Text="{Binding FeaturedMeditation.IconEmoji}" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                    <Label Text="{Binding FeaturedMeditation.Title}" Style="{StaticResource CardTitle}"/>
+                                    <Label Text="{Binding FeaturedMeditation.Subtitle}" Style="{StaticResource BodyText}"/>
+                                    <Label Text="{Binding FeaturedMeditation.BenefitsLabel}" Style="{StaticResource CaptionText}"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="2"
+                                        Text="Start"
+                                        Style="{StaticResource PillButton}"
+                                        Command="{Binding OpenMeditationCommand}"
+                                        CommandParameter="{Binding FeaturedMeditation}"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Label Text="All Guided Meditations" Style="{StaticResource SectionHeading}"/>
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}" Spacing="14">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:Meditation">
+                                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="16">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                            <GradientStop Color="#B3FFFFFF" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#2563EB" Offset="0,4" Radius="18" Opacity="0.08"/>
+                                    </Border.Shadow>
+                                    <Grid ColumnDefinitions="68,*,Auto" ColumnSpacing="12">
+                                        <Border Grid.Column="0" WidthRequest="56" HeightRequest="56" StrokeThickness="0" StrokeShape="RoundRectangle 18">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="{Binding GradientStart}" Offset="0"/>
+                                                    <GradientStop Color="{Binding GradientEnd}" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <Label Text="{Binding IconEmoji}" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                            <Label Text="{Binding Title}" Style="{StaticResource CardTitle}"/>
+                                            <Label Text="{Binding Subtitle}" Style="{StaticResource BodyText}"/>
+                                            <HorizontalStackLayout Spacing="8">
+                                                <Label Text="{Binding DurationLabel}" Style="{StaticResource CaptionText}"/>
+                                                <Label Text="•" Style="{StaticResource CaptionText}"/>
+                                                <Label Text="{Binding Difficulty}" Style="{StaticResource CaptionText}"/>
+                                                <Label Text="•" Style="{StaticResource CaptionText}"/>
+                                                <Label Text="{Binding Category}" Style="{StaticResource CaptionText}"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                        <Button Grid.Column="2"
+                                                Text="Open"
+                                                Style="{StaticResource PillButton}"
+                                                VerticalOptions="Center"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MeditationLibraryViewModel}}, Path=OpenMeditationCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

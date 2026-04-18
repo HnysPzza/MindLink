@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.ProfilePage"
+             x:DataType="vm:ProfileViewModel">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+        <ScrollView ZIndex="1">
+            <VerticalStackLayout Padding="20,52,20,48" Spacing="22">
+                <Border StrokeShape="RoundRectangle 28" StrokeThickness="0" Padding="22">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2563EB" Offset="0"/>
+                            <GradientStop Color="#3B82F6" Offset="0.55"/>
+                            <GradientStop Color="#60A5FA" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow><Shadow Brush="#332563EB" Offset="0,14" Radius="28" Opacity="0.35"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                            <Border WidthRequest="84" HeightRequest="84" StrokeShape="RoundRectangle 42" StrokeThickness="2" Stroke="#88DBEAFE" BackgroundColor="#24FFFFFF">
+                                <Grid>
+                                    <Label Text="👤" FontSize="38" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding HasProfileImage, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <Image Source="{Binding ProfileImageSource}" Aspect="AspectFill" IsVisible="{Binding HasProfileImage}"/>
+                                </Grid>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                <Label Text="{Binding UserName}" FontFamily="SyneBold" FontSize="28" TextColor="White"/>
+                                <Label Text="Your wellness profile, progress, and support tools in one place." FontFamily="JakartaRegular" FontSize="13" TextColor="#EAF2FF"/>
+                                <Border HorizontalOptions="Start" StrokeThickness="0" BackgroundColor="#22FFFFFF" Padding="12,6" StrokeShape="RoundRectangle 14">
+                                    <Label Text="{Binding MoodStreak, StringFormat='🔥 {0} day mood streak'}" FontFamily="DMSansSemiBold" FontSize="12" TextColor="White"/>
+                                </Border>
+                            </VerticalStackLayout>
+                            <Button Grid.Column="2" Text="SOS" BackgroundColor="#DC2626" TextColor="White" CornerRadius="16" WidthRequest="74" HeightRequest="42" VerticalOptions="Start" Command="{Binding TriggerSosCommand}"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*">
+                            <Button Grid.Column="0" Text="Edit Profile" Style="{StaticResource OutlineButton}" BackgroundColor="#22FFFFFF" TextColor="White" BorderColor="#55FFFFFF" Command="{Binding EditProfileCommand}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="Overview" Style="{StaticResource SectionHeading}"/>
+                <Grid ColumnDefinitions="*,14,*">
+                    <Border Grid.Column="0" StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                        <Border.Background><SolidColorBrush Color="{StaticResource SurfaceCard}"/></Border.Background>
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Breathing Work" Style="{StaticResource SectionLabel}"/>
+                            <controls:CircularProgressRing Progress="{Binding ExerciseRingProgress}" Value="{Binding ExercisesCompleted}" Label="Exercises" WidthRequest="98" HeightRequest="98" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="2" StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                        <Border.Background><SolidColorBrush Color="{StaticResource SurfaceCard}"/></Border.Background>
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Check-Ins" Style="{StaticResource SectionLabel}"/>
+                            <controls:CircularProgressRing Progress="{Binding AssessmentRingProgress}" Value="{Binding AssessmentsCompleted}" Label="Assessments" WidthRequest="98" HeightRequest="98" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><SolidColorBrush Color="{StaticResource SurfaceCard}"/></Border.Background>
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Quick Actions" Style="{StaticResource SectionHeading}"/>
+                        <Grid ColumnDefinitions="*,12,*" RowDefinitions="Auto,12,Auto,12,Auto">
+                            <Border Grid.Row="0" Grid.Column="0" StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 18" Padding="16">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenEmergencyContactsCommand}"/></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="🆘" FontSize="24"/>
+                                    <Label Text="Emergency Contacts" Style="{StaticResource CardTitle}"/>
+                                    <Label Text="Manage primary support and crisis contacts." Style="{StaticResource CaptionText}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="2" StrokeThickness="0" BackgroundColor="#ECFEFF" StrokeShape="RoundRectangle 18" Padding="16">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSettingsCommand}"/></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="⚙️" FontSize="24"/>
+                                    <Label Text="General Settings" Style="{StaticResource CardTitle}"/>
+                                    <Label Text="Theme, reminders, and data export controls." Style="{StaticResource CaptionText}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="2" Grid.ColumnSpan="3" StrokeThickness="0" BackgroundColor="#F8FAFC" StrokeShape="RoundRectangle 18" Padding="16">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="🎯 Personal Goal" Style="{StaticResource CardTitle}"/>
+                                    <Label Text="{Binding PersonalGoal}" Style="{StaticResource BodyText}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <!-- Phase 4: Advanced Reporting entry point -->
+                            <Border Grid.Row="4" Grid.ColumnSpan="3" StrokeThickness="0" StrokeShape="RoundRectangle 18" Padding="16">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#EDE9FE" Offset="0"/>
+                                        <GradientStop Color="#DBEAFE" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenAdvancedReportingCommand}"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Label Grid.Column="0" Text="📊" FontSize="28" VerticalOptions="Center"/>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="Wellness Insights" FontFamily="SyneBold" FontSize="16" TextColor="#4338CA"/>
+                                        <Label Text="Mood, sleep, habits &amp; weather correlations." Style="{StaticResource CaptionText}"/>
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2" Text="→" FontSize="20" TextColor="#6D28D9" VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20">
+                    <Border.Background><SolidColorBrush Color="{StaticResource SurfaceCard}"/></Border.Background>
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Support Readiness" Style="{StaticResource SectionHeading}"/>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Border WidthRequest="46" HeightRequest="46" BackgroundColor="#FEE2E2" StrokeThickness="0" StrokeShape="RoundRectangle 16">
+                                <Label Text="☎" FontSize="22" TextColor="#B91C1C" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                <Label Text="{Binding PrimaryContactSummary}" Style="{StaticResource CardTitle}"/>
+                                <Label Text="{Binding EmergencyContactCount, StringFormat='{}{0} emergency contacts saved'}" Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Border WidthRequest="46" HeightRequest="46" BackgroundColor="#DBEAFE" StrokeThickness="0" StrokeShape="RoundRectangle 16">
+                                <Label Text="🔔" FontSize="22" TextColor="#1D4ED8" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                <Label Text="Reminders" Style="{StaticResource CardTitle}"/>
+                                <Label Text="{Binding NotificationStatusSummary}" Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button Text="Log Out" BackgroundColor="Transparent" TextColor="#EF4444" BorderColor="#EF4444" BorderWidth="1" Command="{Binding SignOutCommand}"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

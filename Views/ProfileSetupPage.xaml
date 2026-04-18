@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="M1ndLink.Views.ProfileSetupPage"
+             Title="Set Up Profile"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#E8F1FB" Offset="0.0"/>
+            <GradientStop Color="#F0F8FF" Offset="0.5"/>
+            <GradientStop Color="#D6EAF8" Offset="1.0"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid>
+        <!-- Background Blobs -->
+        <AbsoluteLayout>
+            <Ellipse Fill="#224A90D9" WidthRequest="220" HeightRequest="220"
+                     AbsoluteLayout.LayoutBounds="-60, -60, 220, 220"/>
+            <Ellipse Fill="#1A6BB8C4" WidthRequest="260" HeightRequest="260"
+                     AbsoluteLayout.LayoutBounds="1, 1, 260, 260"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
+        </AbsoluteLayout>
+
+        <!-- Main Content -->
+        <ScrollView>
+            <VerticalStackLayout Padding="32" VerticalOptions="Center" Spacing="0">
+
+                <BoxView HeightRequest="32" Color="Transparent"/>
+
+                <!-- Avatar Section -->
+                <Grid HorizontalOptions="Center" WidthRequest="100" HeightRequest="100">
+
+                    <!-- Avatar Ring -->
+                    <Border WidthRequest="100" HeightRequest="100"
+                            StrokeShape="RoundRectangle 50"
+                            Stroke="{StaticResource SoftTeal}"
+                            StrokeThickness="3"
+                            BackgroundColor="#EBF6F9"
+                            HorizontalOptions="Center">
+
+                        <!-- Avatar Photo (shown when set) -->
+                        <Image x:Name="AvatarImage"
+                               Source="{Binding AvatarSource}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding HasAvatar}"/>
+                    </Border>
+
+                    <!-- Camera Overlay Button -->
+                    <Border WidthRequest="32" HeightRequest="32"
+                            StrokeShape="RoundRectangle 16"
+                            BackgroundColor="{StaticResource PrimaryBlue}"
+                            Stroke="White" StrokeThickness="2"
+                            HorizontalOptions="End" VerticalOptions="End"
+                            Margin="0,0,0,0">
+                        <Label Text="📷" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding PickAvatarCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Default icon when no avatar -->
+                    <Label Text="👤" FontSize="40"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           IsVisible="{Binding HasAvatar, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                </Grid>
+
+                <Label Text="Add photo" TextColor="{StaticResource SoftTeal}"
+                       FontFamily="LatoSemiBold" FontSize="12"
+                       HorizontalOptions="Center" Margin="0,6,0,0">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PickAvatarCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <BoxView HeightRequest="28" Color="Transparent"/>
+
+                <!-- Heading -->
+                <Label x:Name="TitleLabel"
+                       Text="Tell us about yourself"
+                       Style="{StaticResource DisplayHeading}"
+                       HorizontalOptions="Center"/>
+
+                <Label x:Name="SubtitleLabel"
+                       Text="{Binding UserEmail}"
+                       TextColor="{StaticResource TextMuted}"
+                       FontFamily="Lato" FontSize="13"
+                       HorizontalOptions="Center"
+                       Margin="0,4,0,28"/>
+
+                <!-- Glass Card -->
+                <Frame x:Name="FormCard"
+                       CornerRadius="20" BackgroundColor="#B8FFFFFF"
+                       BorderColor="#E2EDF7" HasShadow="True" Padding="24">
+                    <VerticalStackLayout Spacing="16">
+
+                        <!-- Full Name -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Full Name *" FontFamily="NunitoSemiBold"
+                                   FontSize="12" TextColor="{StaticResource DeepBlue}"/>
+                            <Border Style="{StaticResource InputBorder}" HeightRequest="48">
+                                <Entry x:Name="NameEntry"
+                                       Text="{Binding FullName}"
+                                       Placeholder="e.g. Alex Rivera"
+                                       PlaceholderColor="{StaticResource TextMuted}"
+                                       TextColor="{StaticResource TextDark}"
+                                       FontFamily="Lato" FontSize="15"/>
+                            </Border>
+                            <Label Text="Please enter your name"
+                                   IsVisible="{Binding HasNameError}"
+                                   TextColor="{StaticResource ErrorRed}"
+                                   FontFamily="LatoSemiBold" FontSize="11"/>
+                        </VerticalStackLayout>
+
+                        <!-- Personal Goal / Bio -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Personal Goal (optional)" FontFamily="NunitoSemiBold"
+                                   FontSize="12" TextColor="{StaticResource DeepBlue}"/>
+                            <Border StrokeShape="RoundRectangle 12" Stroke="#D0E4F5"
+                                    StrokeThickness="1.5" BackgroundColor="White"
+                                    Padding="12,8" MinimumHeightRequest="80">
+                                <Editor Text="{Binding Bio}"
+                                        Placeholder="e.g. Feel calmer and sleep better"
+                                        PlaceholderColor="{StaticResource TextMuted}"
+                                        TextColor="{StaticResource TextDark}"
+                                        FontFamily="Lato" FontSize="15"
+                                        AutoSize="TextChanges"
+                                        MinimumHeightRequest="64"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <BoxView HeightRequest="8" Color="Transparent"/>
+
+                <!-- Save Button -->
+                <Button x:Name="SaveButton"
+                        Text="Continue to App →"
+                        Command="{Binding SaveProfileCommand}"
+                        BackgroundColor="{StaticResource PrimaryBlue}"
+                        TextColor="White"
+                        FontFamily="NunitoSemiBold"
+                        FontSize="16"
+                        CornerRadius="14"
+                        HeightRequest="52"
+                        Shadow="{Shadow Brush='#404A90D9', Offset='0,4', Radius=12}"/>
+
+                <BoxView HeightRequest="12" Color="Transparent"/>
+
+                <!-- Skip link -->
+                <Label Text="Skip for now"
+                       TextColor="{StaticResource TextMuted}"
+                       FontFamily="Lato" FontSize="13"
+                       HorizontalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSkipTapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <BoxView HeightRequest="24" Color="Transparent"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>

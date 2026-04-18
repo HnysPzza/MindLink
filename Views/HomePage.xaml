@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.HomePage"
+             x:DataType="vm:HomeViewModel">
+
+    <Grid>
+        <!-- Animated gradient layer -->
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <ScrollView ZIndex="1">
+            <VerticalStackLayout Padding="20,52,20,32" Spacing="20">
+
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto,12,Auto">
+
+                    <!-- Greeting text -->
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="{Binding Greeting}" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Let's check in — how are you doing?" Style="{StaticResource BodyText}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Notification Bell -->
+                    <Grid Grid.Column="1" VerticalOptions="Center">
+                        <Border WidthRequest="40" HeightRequest="40"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="1.5"
+                                Stroke="{StaticResource AccentSubtle}"
+                                BackgroundColor="#F0F7FF">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenNotificationsCommand}"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="🔔" FontSize="18"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Unread badge — only visible when UnreadCount > 0 -->
+                        <Border WidthRequest="18" HeightRequest="18"
+                                StrokeShape="RoundRectangle 9"
+                                BackgroundColor="#EF4444"
+                                StrokeThickness="0"
+                                HorizontalOptions="End" VerticalOptions="Start"
+                                IsVisible="{Binding HasUnreadNotifications}">
+                            <Label Text="{Binding UnreadNotificationCount}"
+                                   FontFamily="DMSansBold"
+                                   FontSize="10"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- Profile Avatar -->
+                    <Border Grid.Column="3"
+                            WidthRequest="44" HeightRequest="44"
+                            StrokeShape="RoundRectangle 22"
+                            StrokeThickness="2"
+                            Stroke="{StaticResource AccentPrimaryLight}"
+                            BackgroundColor="{StaticResource AccentSubtle}"
+                            VerticalOptions="Center">
+                        <Label Text="👤" FontSize="22"
+                               HorizontalOptions="Center" VerticalOptions="Center"
+                               IsVisible="{Binding HasProfileImage,
+                                   Converter={StaticResource InverseBoolConverter}}"/>
+                        <Image Source="{Binding ProfileImageSource}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding HasProfileImage}"/>
+                    </Border>
+                </Grid>
+
+                <!-- CTA Card -->
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20,16">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                            <GradientStop Color="#99FFFFFF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="20" Opacity="0.08"/></Border.Shadow>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToAssessmentCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="How are you feeling today?" Style="{StaticResource CardTitle}"/>
+                            <Label Text="Takes less than a minute"   Style="{StaticResource CaptionText}"/>
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1" WidthRequest="40" HeightRequest="40"
+                                StrokeShape="RoundRectangle 20" BackgroundColor="{StaticResource AccentPrimary}">
+                            <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="12" Opacity="0.35"/></Border.Shadow>
+                            <Label Text="→" TextColor="White" FontSize="18"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Current Mood Card -->
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                            <GradientStop Color="#99FFFFFF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="20" Opacity="0.08"/></Border.Shadow>
+                    <Grid ColumnDefinitions="4,*,Auto" Padding="0,16,16,16">
+                        <BoxView Grid.Column="0" BackgroundColor="{StaticResource AccentPrimary}" CornerRadius="0,4,4,0"/>
+                        <VerticalStackLayout Grid.Column="1" Padding="16,0" Spacing="2">
+                            <Label Text="Current Mood"                       Style="{StaticResource CardTitle}"/>
+                            <Label Text="{Binding CurrentMoodLabel}" Style="{StaticResource BodyText}" LineBreakMode="TailTruncation"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="{Binding CurrentMoodEmoji}" FontSize="36" VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 20" Stroke="#FCA5A5" StrokeThickness="1.5" Padding="18" BackgroundColor="#FEF2F2">
+                    <Border.Shadow><Shadow Brush="#DC2626" Offset="0,4" Radius="18" Opacity="0.10"/></Border.Shadow>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Need help right now?" FontFamily="DMSansBold" FontSize="16" TextColor="#991B1B"/>
+                            <Label Text="Open crisis support for emergency contacts, helplines, and grounding steps." Style="{StaticResource BodyText}"/>
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1"
+                                Text="SOS"
+                                BackgroundColor="#DC2626"
+                                TextColor="White"
+                                CornerRadius="16"
+                                WidthRequest="74"
+                                HeightRequest="44"
+                                VerticalOptions="Center"
+                                Command="{Binding TriggerSosCommand}"/>
+                    </Grid>
+                </Border>
+
+                <Label Text="Quick Actions" Style="{StaticResource SectionHeading}" Margin="0,2,0,0"/>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                    <Grid ColumnDefinitions="*,12,*" RowDefinitions="Auto,12,Auto,12,Auto,12,Auto">
+                        <Border Grid.Row="0" Grid.Column="0" StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 18" Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding StartMoodCheckInCommand}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="😊" FontSize="24"/>
+                                <Label Text="Log Mood" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Open your mood check-in quickly." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="2" StrokeThickness="0" BackgroundColor="#ECFEFF" StrokeShape="RoundRectangle 18" Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenExercisesCommand}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="🫁" FontSize="24"/>
+                                <Label Text="Exercises" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Jump into breathing or grounding." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        
+                        <Border Grid.Row="2" Grid.Column="0" StrokeThickness="0" BackgroundColor="#F5F3FF" StrokeShape="RoundRectangle 18" Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateToAssessmentCommand}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="📋" FontSize="24"/>
+                                <Label Text="Assessment" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Track how your week is going." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="2" Grid.Column="2" StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 18" Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenTodoListCommand}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="✓" FontSize="24"/>
+                                <Label Text="My Tasks" Style="{StaticResource CardTitle}"/>
+                                <Label Text="{Binding PendingTaskCount, StringFormat='{}{0} tasks still open'}" Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="4" Grid.Column="0" StrokeThickness="0" BackgroundColor="#E0F2FE" StrokeShape="RoundRectangle 18" Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenHabitsCommand}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="💧" FontSize="24"/>
+                                <Label Text="Habits" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Build positive routines." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="4" Grid.Column="2" StrokeThickness="0" BackgroundColor="#FEF3C7" StrokeShape="RoundRectangle 18" Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenMedicationCommand}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="💊" FontSize="24"/>
+                                <Label Text="Medications" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Track refills and doses." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        
+                        <Border Grid.Row="6" Grid.Column="0" StrokeThickness="0" BackgroundColor="#F3E8FF" StrokeShape="RoundRectangle 18" Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenSleepDiaryCommand}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="🌙" FontSize="24"/>
+                                <Label Text="Sleep Diary" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Track rest quality." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="6" Grid.Column="2" StrokeThickness="0" BackgroundColor="#FEE2E2" StrokeShape="RoundRectangle 18" Padding="14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenTriggersCommand}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="⚡" FontSize="24"/>
+                                <Label Text="Triggers" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Log emotional events." Style="{StaticResource CaptionText}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20,16">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#EEF2FF" Offset="0"/>
+                            <GradientStop Color="#DBEAFE" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0" Text="{Binding DailyTipIcon}" FontSize="28" VerticalOptions="Start"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Today’s Tip" Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{Binding DailyTipTitle}" Style="{StaticResource CardTitle}"/>
+                            <Label Text="{Binding DailyTipContent}" Style="{StaticResource BodyText}"/>
+                        </VerticalStackLayout>
+                        <Border Grid.Column="2" StrokeThickness="0" BackgroundColor="#FFFFFFAA" StrokeShape="RoundRectangle 14" Padding="10,6" VerticalOptions="Start">
+                            <Label Text="{Binding PendingTaskCount, StringFormat='{}{0} open'}" FontFamily="DMSansMedium" FontSize="11" TextColor="#3730A3"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Progress -->
+                <Label Text="Your Progress" Style="{StaticResource SectionHeading}" Margin="0,4,0,0"/>
+                <Grid ColumnDefinitions="*,16,*">
+                    <!-- Risk -->
+                    <Border Grid.Column="0" StrokeShape="RoundRectangle 18" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="16">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                <GradientStop Color="#99FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="16" Opacity="0.07"/></Border.Shadow>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Current Risk" Style="{StaticResource SectionLabel}"/>
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <controls:RiskIndicatorDot Grid.Column="0" RiskColorHex="{Binding RiskColor}"
+                                    WidthRequest="16" HeightRequest="16" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{Binding RiskLevel}" Style="{StaticResource CardTitle}" VerticalOptions="Center"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                    <!-- Streak -->
+                    <Border Grid.Column="2" StrokeShape="RoundRectangle 18" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="16">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                <GradientStop Color="#99FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="16" Opacity="0.07"/></Border.Shadow>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Mood Streak" Style="{StaticResource SectionLabel}"/>
+                            <HorizontalStackLayout Spacing="6">
+                                <Label Text="{Binding MoodStreak}" Style="{StaticResource StatNumber}"/>
+                                <Label Text="🔥" FontSize="22" VerticalOptions="End" Margin="0,0,0,4"/>
+                            </HorizontalStackLayout>
+                            <Label Text="Days" Style="{StaticResource CaptionText}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Mood Chart -->
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20,16">
+                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="20" Opacity="0.08"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Monthly Mood Chart" Style="{StaticResource CardTitle}"/>
+                        <controls:MoodLineChart Data="{Binding MoodChartData}" HeightRequest="120"/>
+                        <Label Text="Your mood fluctuates but stays mostly positive."
+                               Style="{StaticResource CaptionText}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ═══ Weekly Mood Summary ═══ -->
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20,16"
+                        IsVisible="{Binding HasWeeklySummary}">
+                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="20" Opacity="0.08"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="14">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0" Text="Weekly Summary" Style="{StaticResource CardTitle}"/>
+                            <Label Grid.Column="1" Text="{Binding WeeklySummaryEmoji}" FontSize="24" VerticalOptions="Center"/>
+                        </Grid>
+
+                        <!-- 7-day strip -->
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding WeekDays}"
+                                                 HorizontalOptions="Center" Spacing="8">
+                             <BindableLayout.ItemTemplate>
+                                 <DataTemplate x:DataType="vm:WeekDayEntry">
+                                     <VerticalStackLayout Spacing="4" WidthRequest="38" HorizontalOptions="Center">
+                                         <Label Text="{Binding DayLabel}" Style="{StaticResource CaptionText}" HorizontalOptions="Center"/>
+                                         <Border WidthRequest="30" HeightRequest="30"
+                                                 StrokeShape="RoundRectangle 15"
+                                                 StrokeThickness="0"
+                                                BackgroundColor="{Binding MoodColor}"
+                                                HorizontalOptions="Center">
+                                            <Label Text="{Binding MoodEmoji}" FontSize="14"
+                                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                                         </Border>
+                                     </VerticalStackLayout>
+                                 </DataTemplate>
+                             </BindableLayout.ItemTemplate>
+                         </HorizontalStackLayout>
+
+                        <Label Text="{Binding WeeklySummaryText}"
+                               Style="{StaticResource BodyText}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ═══ Risk Level History ═══ -->
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20,16"
+                        IsVisible="{Binding HasRiskData}">
+                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="20" Opacity="0.08"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Risk Level History" Style="{StaticResource CardTitle}"/>
+                        <controls:RiskLevelChart Data="{Binding RiskChartData}" HeightRequest="100"/>
+                        <!-- Legend -->
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="16">
+                            <HorizontalStackLayout Spacing="4">
+                                <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5" BackgroundColor="#22C55E"/>
+                                <Label Text="Low" Style="{StaticResource CaptionText}"/>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5" BackgroundColor="#F59E0B"/>
+                                <Label Text="Medium" Style="{StaticResource CaptionText}"/>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5" BackgroundColor="#EF4444"/>
+                                <Label Text="High" Style="{StaticResource CaptionText}"/>
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20,16">
+                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="20" Opacity="0.08"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0" Text="Recent Activity" Style="{StaticResource CardTitle}"/>
+                            <Label Grid.Column="1" Text="View Tasks" FontFamily="DMSansMedium" FontSize="13" TextColor="{StaticResource AccentPrimary}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenTodoListCommand}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+                        <VerticalStackLayout IsVisible="{Binding HasRecentActivities}" BindableLayout.ItemsSource="{Binding RecentActivities}" Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:HomeActivityItem">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Border Grid.Column="0" WidthRequest="42" HeightRequest="42" StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 21">
+                                            <Label Text="{Binding Icon}" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding Title}" FontFamily="DMSansSemiBold" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+                                            <Label Text="{Binding Subtitle}" Style="{StaticResource CaptionText}" LineBreakMode="TailTruncation" MaxLines="2"/>
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2" Text="{Binding RelativeTime}" Style="{StaticResource CaptionText}" VerticalOptions="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <Label IsVisible="{Binding HasRecentActivities, Converter={StaticResource InverseBoolConverter}}" Text="Your mood logs, exercises, assessments, and completed tasks will show up here." Style="{StaticResource BodyText}" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ── Step 1: Mood Picker ── -->
+                <Label Text="Log Today's Mood" Style="{StaticResource SectionHeading}"/>
+                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20,16">
+                    <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="20" Opacity="0.08"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="14">
+
+                        <!-- Emoji strip -->
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                            <Label Text="😢" FontSize="34">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectMoodCommand}" CommandParameter="1"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Text="😔" FontSize="34">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectMoodCommand}" CommandParameter="2"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Text="😐" FontSize="34">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectMoodCommand}" CommandParameter="3"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Text="🙂" FontSize="34">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectMoodCommand}" CommandParameter="4"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Text="😄" FontSize="34">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectMoodCommand}" CommandParameter="5"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </HorizontalStackLayout>
+
+                        <!-- ── Step 2: Note Entry Panel (shown after emoji tap) ── -->
+                        <VerticalStackLayout IsVisible="{Binding IsNoteEntryVisible}" Spacing="12">
+                            <!-- Divider -->
+                            <BoxView HeightRequest="1" BackgroundColor="{StaticResource Divider}"/>
+
+                            <!-- Selected mood header -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="{Binding PendingMoodEmoji}"
+                                       FontSize="28" VerticalOptions="Center"/>
+                                <VerticalStackLayout Grid.Column="1" Margin="10,0" Spacing="1" VerticalOptions="Center">
+                                    <Label Text="{Binding PendingMoodLabel}"
+                                           FontFamily="DMSansSemiBold" FontSize="15"
+                                           TextColor="{StaticResource TextPrimary}"/>
+                                    <Label Text="Add a note (optional)"
+                                           Style="{StaticResource CaptionText}"/>
+                                </VerticalStackLayout>
+                                <!-- Cancel X -->
+                                <Label Grid.Column="2"
+                                       Text="✕" FontSize="14"
+                                       TextColor="{StaticResource TextMuted}"
+                                       VerticalOptions="Center" Padding="8,0,0,0">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding CancelMoodEntryCommand}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Grid>
+
+                            <!-- Note input -->
+                            <Border StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource AccentSubtle}"
+                                    StrokeThickness="1.5"
+                                    Padding="14,10"
+                                    BackgroundColor="#F0F7FF">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Editor Grid.Column="0" Text="{Binding MoodNoteText}"
+                                            Placeholder="What's on your mind today?"
+                                            PlaceholderColor="#94A3B8"
+                                            FontFamily="JakartaRegular"
+                                            FontSize="14"
+                                            TextColor="Black"
+                                            AutoSize="TextChanges"
+                                            MinimumHeightRequest="64"
+                                            MaximumHeightRequest="160"/>
+                                            
+                                    <Label Grid.Column="1" Text="🎙️" FontSize="20" VerticalOptions="End" Margin="0,0,0,8" SemanticProperties.Hint="Record your thoughts via Voice">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding StartDictationCommand}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+
+                            <!-- Save button -->
+                            <Button Text="Save Mood Entry"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Command="{Binding ConfirmMoodCommand}"
+                                    HeightRequest="46"/>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- View Journal link -->
+                <Label HorizontalOptions="Center" Margin="0,-6,0,0">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="📓  " FontSize="14"/>
+                            <Span Text="View Journal History"
+                                  FontFamily="DMSansMedium" FontSize="14"
+                                  TextColor="{StaticResource AccentPrimary}"
+                                  TextDecorations="Underline"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ViewJournalCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

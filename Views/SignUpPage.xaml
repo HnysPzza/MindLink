@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.SignUpPage"
+             Title="Create Account">
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#D7E3F4" Offset="0"/>
+            <GradientStop Color="#EAF1F8" Offset="0.45"/>
+            <GradientStop Color="#C9D9F2" Offset="1"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Padding="24,42,24,32" Spacing="20">
+                <Border x:Name="HeaderPanel" StrokeThickness="0" BackgroundColor="#DCE8F6" StrokeShape="RoundRectangle 32" Padding="22">
+                    <Border.Shadow>
+                        <Shadow Brush="#220F1F3A" Offset="0,12" Radius="28" Opacity="0.28"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="14">
+                        <Border HorizontalOptions="Start" StrokeThickness="0" BackgroundColor="#F8FBFF" StrokeShape="RoundRectangle 14" Padding="12,6">
+                            <Label Text="SET UP YOUR SPACE" FontFamily="DMSansSemiBold" FontSize="11" TextColor="Black" CharacterSpacing="1.5"/>
+                        </Border>
+                        <Label x:Name="AppNameLabel" Text="Create your MindLink account" FontFamily="SyneBold" FontSize="30" TextColor="Black"/>
+                        <Label Text="Build a more grounded daily system for check-ins, support contacts, reminders, and guided recovery habits." FontFamily="JakartaRegular" FontSize="14" TextColor="Black"/>
+                        <Grid ColumnDefinitions="*,12,*">
+                            <Border Grid.Column="0" StrokeThickness="0" BackgroundColor="#F4F8FC" StrokeShape="RoundRectangle 18" Padding="14,12">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Personal tracking" FontFamily="DMSansBold" FontSize="13" TextColor="Black"/>
+                                    <Label Text="Mood logs and assessments stay organized from day one." FontFamily="JakartaRegular" FontSize="12" TextColor="Black"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="2" StrokeThickness="0" BackgroundColor="#F4F8FC" StrokeShape="RoundRectangle 18" Padding="14,12">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Support ready" FontFamily="DMSansBold" FontSize="13" TextColor="Black"/>
+                                    <Label Text="Set your emergency contacts and notifications when you are ready." FontFamily="JakartaRegular" FontSize="12" TextColor="Black"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border x:Name="AuthCard" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" BackgroundColor="{StaticResource SurfaceElevated}" StrokeShape="RoundRectangle 30" Padding="24">
+                    <Border.Shadow>
+                        <Shadow Brush="#18233B53" Offset="0,10" Radius="26" Opacity="0.18"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="16">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Create account" FontFamily="SyneBold" FontSize="26" TextColor="Black"/>
+                            <Label Text="Use an email and password you can come back to easily. You can personalize the rest after sign up." Style="{StaticResource BodyText}" TextColor="Black"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="14">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Email address" FontFamily="DMSansSemiBold" FontSize="12" TextColor="Black"/>
+                                <Border Style="{StaticResource InputBorder}" HeightRequest="54" Padding="16,0">
+                                    <Entry Text="{Binding Email}" Placeholder="name@domain.com" PlaceholderColor="#94A3B8" Keyboard="Email"/>
+                                </Border>
+                                <Label Text="Email is required" IsVisible="{Binding HasEmailError}" TextColor="{StaticResource ErrorRed}" FontFamily="DMSansSemiBold" FontSize="11" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Password" FontFamily="DMSansSemiBold" FontSize="12" TextColor="Black"/>
+                                <Border Style="{StaticResource InputBorder}" HeightRequest="54" Padding="16,0">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Entry x:Name="PasswordEntry" Text="{Binding Password}" Placeholder="Create a password" PlaceholderColor="#94A3B8" IsPassword="True"/>
+                                        <Label x:Name="EyeIconPwd" Grid.Column="1" Text="Show" FontFamily="DMSansSemiBold" FontSize="12" TextColor="Black" VerticalOptions="Center">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnTogglePasswordClicked"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Grid>
+                                </Border>
+                                <Label Text="Password must be at least 6 characters" IsVisible="{Binding HasPasswordError}" TextColor="{StaticResource ErrorRed}" FontFamily="DMSansSemiBold" FontSize="11" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Confirm password" FontFamily="DMSansSemiBold" FontSize="12" TextColor="Black"/>
+                                <Border Style="{StaticResource InputBorder}" HeightRequest="54" Padding="16,0">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Entry x:Name="ConfirmPasswordEntry" Text="{Binding ConfirmPassword}" Placeholder="Re-enter your password" PlaceholderColor="#94A3B8" IsPassword="True"/>
+                                        <Label x:Name="EyeIconConfirm" Grid.Column="1" Text="Show" FontFamily="DMSansSemiBold" FontSize="12" TextColor="Black" VerticalOptions="Center">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnToggleConfirmPasswordClicked"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Grid>
+                                </Border>
+                                <Label Text="Passwords do not match" IsVisible="{Binding HasConfirmPasswordError}" TextColor="{StaticResource ErrorRed}" FontFamily="DMSansSemiBold" FontSize="11" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+
+                        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource PrimaryBlue}" HorizontalOptions="Center"/>
+
+                        <Button x:Name="RegisterButton" Text="Create Account" Command="{Binding SignUpCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource PrimaryButton}"/>
+
+                        <Border StrokeThickness="0" BackgroundColor="{StaticResource SurfaceSheet}" StrokeShape="RoundRectangle 18" Padding="16,14">
+                            <Label Text="You will be able to choose your theme, configure reminders, and add emergency contacts after registration." Style="{StaticResource BodyText}"/>
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border x:Name="FooterPanel" StrokeThickness="0" BackgroundColor="#A8F8FBFF" StrokeShape="RoundRectangle 24" Padding="18,16">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Already set up?" FontFamily="DMSansBold" FontSize="15" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"/>
+                        <Label Text="Return to sign in and continue with your existing routine." Style="{StaticResource BodyText}" HorizontalTextAlignment="Center"/>
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                            <Label Text="Already have an account?" TextColor="{StaticResource TextMuted}" FontFamily="JakartaRegular" VerticalOptions="Center" />
+                            <Label Text="Sign In" TextColor="{StaticResource AccentPrimary}" FontFamily="DMSansBold" VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding GoBackToLoginCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

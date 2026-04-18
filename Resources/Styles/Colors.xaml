@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Redesign Soft-Luxury Palette -->
+    <Color x:Key="PrimaryBlue">#2563EB</Color>
+    <Color x:Key="DeepBlue">#000000</Color>
+    <Color x:Key="SoftTeal">#14B8A6</Color>
+    <Color x:Key="WarmWhite">#F8FAFC</Color>
+    <Color x:Key="GlassWhite">#EEF4FB</Color>
+    <Color x:Key="TextDark">#000000</Color>
+    <Color x:Key="ErrorRed">#E05C5C</Color>
+
+    <!-- Backgrounds -->
+    <Color x:Key="BgBase">#E5EDF8</Color>
+    <Color x:Key="BgGradientStart">#C9D9F2</Color>
+    <Color x:Key="BgGradientMid">#D7E3F4</Color>
+    <Color x:Key="BgGradientEnd">#EAF1F8</Color>
+
+    <!-- Surfaces -->
+    <Color x:Key="SurfaceCard">#EAF1FB</Color>
+    <Color x:Key="SurfaceElevated">#F8FBFF</Color>
+    <Color x:Key="SurfaceSheet">#EEF4FB</Color>
+
+    <!-- Accent Blue -->
+    <Color x:Key="AccentPrimary">#2563EB</Color>
+    <Color x:Key="AccentPrimaryLight">#3B82F6</Color>
+    <Color x:Key="AccentSubtle">#93C5FD</Color>
+    <Color x:Key="AccentGlow">#2E3B82F6</Color>
+    <Color x:Key="AccentIndicator">#60A5FA</Color>
+
+    <!-- Text -->
+    <Color x:Key="TextPrimary">#000000</Color>
+    <Color x:Key="TextSecondary">#000000</Color>
+    <Color x:Key="TextMuted">#000000</Color>
+    <Color x:Key="TextOnAccent">#000000</Color>
+
+    <!-- Dividers and Borders -->
+    <Color x:Key="Divider">#C2D2E6</Color>
+    <Color x:Key="CardBorderColor">#C9D6E5</Color>
+    <Color x:Key="CardBackground">#F8FBFF</Color>
+
+    <!-- Risk Levels -->
+    <Color x:Key="RiskLow">#22C55E</Color>
+    <Color x:Key="RiskMedium">#F59E0B</Color>
+    <Color x:Key="RiskHigh">#EF4444</Color>
+
+    <!-- Shadow -->
+    <Color x:Key="ShadowBlue">#1E2563EB</Color>
+
+</ResourceDictionary>

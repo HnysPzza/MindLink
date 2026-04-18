@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.ExercisesPage"
+             x:DataType="vm:ExercisesViewModel">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+        <ScrollView ZIndex="1">
+            <VerticalStackLayout Padding="20,52,20,40" Spacing="24">
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Find Your Calm" Style="{StaticResource DisplayHeading}"/>
+                    <Label Text="Select an exercise to help center yourself today." Style="{StaticResource BodyText}"/>
+                </VerticalStackLayout>
+
+                <!-- ═════════ Recommended Section ═════════ -->
+                <VerticalStackLayout IsVisible="{Binding HasRecommendation}" Spacing="16">
+                    <Label Text="Recommended for You" Style="{StaticResource SectionHeading}"/>
+                    <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource AccentPrimaryLight}" StrokeThickness="2" Padding="16" BackgroundColor="#F4F8FF">
+                        <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="18" Opacity="0.12"/></Border.Shadow>
+                        <VerticalStackLayout Spacing="0">
+                            <HorizontalStackLayout Spacing="6" Margin="0,0,0,12">
+                                <Label Text="✨" FontSize="12" VerticalOptions="Center"/>
+                                <Label Text="{Binding RecommendationReason}" Style="{StaticResource CaptionText}" TextColor="{StaticResource AccentPrimary}" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <Grid ColumnDefinitions="68,*,Auto" ColumnSpacing="14">
+                                <Border Grid.Column="0" WidthRequest="56" HeightRequest="56"
+                                        StrokeShape="RoundRectangle 16" StrokeThickness="0">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{Binding RecommendedExercise.GradientStart, FallbackValue={StaticResource AccentPrimaryLight}}" Offset="0"/>
+                                            <GradientStop Color="{Binding RecommendedExercise.GradientEnd, FallbackValue={StaticResource AccentSubtle}}"   Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Label Text="{Binding RecommendedExercise.IconEmoji, FallbackValue='🧘'}" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                    <Label Text="{Binding RecommendedExercise.Title, FallbackValue='Loading…'}"       Style="{StaticResource CardTitle}"/>
+                                    <Label Text="{Binding RecommendedExercise.Description, FallbackValue=''}" Style="{StaticResource BodyText}"/>
+                                    <HorizontalStackLayout Spacing="3">
+                                        <Label Text="⏱" FontSize="11" TextColor="{StaticResource TextMuted}"/>
+                                        <Label Style="{StaticResource CaptionText}">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} min"><Binding Path="RecommendedExercise.DurationMinutes"/></MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="2" Text="Start" Style="{StaticResource PillButton}"
+                                        VerticalOptions="Center"
+                                        Command="{Binding StartExerciseCommand}"
+                                        CommandParameter="{Binding RecommendedExercise}"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- ═════════ All Exercises ═════════ -->
+                <VerticalStackLayout Spacing="16">
+                    <Border StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource AccentPrimaryLight}"
+                            StrokeThickness="1.5"
+                            Padding="18"
+                            BackgroundColor="#EEF5FF">
+                        <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="18" Opacity="0.10"/></Border.Shadow>
+                        <Grid ColumnDefinitions="56,*,Auto" ColumnSpacing="12">
+                            <Border Grid.Column="0" WidthRequest="52" HeightRequest="52"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="#DBEAFE">
+                                <Label Text="🧘" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                <Label Text="Guided Meditation Library" Style="{StaticResource CardTitle}"/>
+                                <Label Text="Listen to spoken mindfulness sessions for focus, sleep, and relaxation." Style="{StaticResource BodyText}"/>
+                            </VerticalStackLayout>
+                            <Button Grid.Column="2"
+                                    Text="Open"
+                                    Style="{StaticResource PillButton}"
+                                    VerticalOptions="Center"
+                                    Command="{Binding OpenMeditationLibraryCommand}"/>
+                        </Grid>
+                    </Border>
+
+                    <Label Text="All Exercises" Style="{StaticResource SectionHeading}"/>
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding ExerciseList}" Spacing="14">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:Exercise">
+                                <Border StrokeShape="RoundRectangle 20" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="16">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                            <GradientStop Color="#B3FFFFFF" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="18" Opacity="0.08"/></Border.Shadow>
+                                    <Grid ColumnDefinitions="68,*,Auto,Auto" ColumnSpacing="10">
+                                        <!-- Icon badge -->
+                                        <Border Grid.Column="0" WidthRequest="56" HeightRequest="56"
+                                                StrokeShape="RoundRectangle 16" StrokeThickness="0">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="{Binding GradientStart}" Offset="0"/>
+                                                    <GradientStop Color="{Binding GradientEnd}"   Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <Label Text="{Binding IconEmoji}" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <!-- Info -->
+                                        <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                            <Label Text="{Binding Title}"       Style="{StaticResource CardTitle}"/>
+                                            <Label Text="{Binding Description}" Style="{StaticResource BodyText}"/>
+                                            <HorizontalStackLayout Spacing="3">
+                                                <Label Text="⏱" FontSize="11" TextColor="{StaticResource TextMuted}"/>
+                                                <Label Style="{StaticResource CaptionText}">
+                                                    <Label.Text>
+                                                        <MultiBinding StringFormat="{}{0} min"><Binding Path="DurationMinutes"/></MultiBinding>
+                                                    </Label.Text>
+                                                </Label>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                        <!-- Favorite star -->
+                                        <Label Grid.Column="2" Text="{Binding FavoriteIcon}"
+                                               FontSize="24" VerticalOptions="Center" Margin="0,0,4,0">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisesViewModel}}, Path=ToggleFavoriteCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                        <!-- Start button -->
+                                        <Button Grid.Column="3" Text="Start" Style="{StaticResource PillButton}"
+                                                VerticalOptions="Center"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisesViewModel}}, Path=StartExerciseCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- ═════════ Add Custom Exercise ═════════ -->
+                <Button Text="➕  Add Custom Exercise" Style="{StaticResource OutlineButton}"
+                        Command="{Binding ShowAddFormCommand}"
+                        IsVisible="{Binding IsAddFormVisible, Converter={StaticResource InverseBoolConverter}}"/>
+
+                <Border StrokeShape="RoundRectangle 20"
+                        Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="20"
+                        IsVisible="{Binding IsAddFormVisible}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                            <GradientStop Color="#99FFFFFF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow><Shadow Brush="#2563EB" Offset="0,4" Radius="18" Opacity="0.08"/></Border.Shadow>
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0" Text="New Exercise" Style="{StaticResource SectionHeading}"/>
+                            <Label Grid.Column="1" Text="✕" FontSize="16" TextColor="{StaticResource TextMuted}" VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding HideAddFormCommand}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+
+                        <!-- Title -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="TITLE" Style="{StaticResource SectionLabel}"/>
+                            <Border StrokeShape="RoundRectangle 12" Stroke="{StaticResource AccentSubtle}" StrokeThickness="1.5" Padding="14,10" BackgroundColor="#F0F7FF">
+                                <Entry Text="{Binding NewExerciseTitle}" Placeholder="e.g. Morning Stretch"
+                                       FontFamily="DMSansMedium" FontSize="15"
+                                       TextColor="Black"
+                                       PlaceholderColor="#94A3B8"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Duration + Type row -->
+                        <Grid ColumnDefinitions="*,16,*">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="DURATION (MIN)" Style="{StaticResource SectionLabel}"/>
+                                <Border StrokeShape="RoundRectangle 12" Stroke="{StaticResource AccentSubtle}" StrokeThickness="1.5" Padding="14,10" BackgroundColor="#F0F7FF">
+                                    <Entry Text="{Binding NewExerciseDuration}" Keyboard="Numeric"
+                                           FontFamily="DMSansMedium" FontSize="15"
+                                           TextColor="Black"
+                                           PlaceholderColor="#94A3B8"/>
+                                </Border>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                <Label Text="TYPE" Style="{StaticResource SectionLabel}"/>
+                                <Border StrokeShape="RoundRectangle 12" Stroke="{StaticResource AccentSubtle}" StrokeThickness="1.5" Padding="6,0" BackgroundColor="#F0F7FF">
+                                    <Picker SelectedItem="{Binding NewExerciseType}"
+                                            FontFamily="DMSansMedium" FontSize="15"
+                                            TextColor="{StaticResource TextPrimary}">
+                                        <Picker.ItemsSource>
+                                            <x:Array Type="{x:Type x:String}">
+                                                <x:String>Breathing</x:String>
+                                                <x:String>Meditation</x:String>
+                                                <x:String>Grounding</x:String>
+                                            </x:Array>
+                                        </Picker.ItemsSource>
+                                    </Picker>
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Button Text="Save Exercise" Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SaveCustomExerciseCommand}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="M1ndLink.Views.SafetyPlanPage"
+             x:DataType="vm:SafetyPlanViewModel">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FEE2E2" Offset="0"/>
+                        <GradientStop Color="#00FEE2E2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Text="←"
+                           FontSize="22"
+                           TextColor="#DC2626"
+                           VerticalOptions="Center"
+                           SemanticProperties.Description="Navigate back to Crisis Hub"
+                           SemanticProperties.Hint="Goes back">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" Spacing="2">
+                        <Label Text="My Safety Plan" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="A personalized action plan for when you're overwhelmed." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20,4,20,40" Spacing="24">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="1. Warning Signs" Style="{StaticResource SectionHeading}"/>
+                        <Label Text="What thoughts, images, moods, or behaviors indicate a crisis might be developing?" Style="{StaticResource CaptionText}"/>
+                        <Border Style="{StaticResource InputBorder}" Padding="8">
+                            <Editor Text="{Binding WarningSigns}" Placeholder="e.g. Isolating myself, racing thoughts, panic attacks..." AutoSize="TextChanges" MinimumHeightRequest="80"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="2. Internal Coping Strategies" Style="{StaticResource SectionHeading}"/>
+                        <Label Text="What can you do to take your mind off things without contacting someone?" Style="{StaticResource CaptionText}"/>
+                        <Border Style="{StaticResource InputBorder}" Padding="8">
+                            <Editor Text="{Binding CopingStrategies}" Placeholder="e.g. Taking a walk, listening to calm music, deep breathing exercises..." AutoSize="TextChanges" MinimumHeightRequest="80"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="3. People to ask for help" Style="{StaticResource SectionHeading}"/>
+                        <Label Text="Who can you reach out to for support when a crisis builds?" Style="{StaticResource CaptionText}"/>
+                        <Border Style="{StaticResource InputBorder}" Padding="8">
+                            <Editor Text="{Binding PeopleToContact}" Placeholder="e.g. John (Brother), Support Group..." AutoSize="TextChanges" MinimumHeightRequest="80"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="4. Professionals and Agencies" Style="{StaticResource SectionHeading}"/>
+                        <Label Text="Clinicians, specific hotlines, or agencies." Style="{StaticResource CaptionText}"/>
+                        <Border Style="{StaticResource InputBorder}" Padding="8">
+                            <Editor Text="{Binding ProfessionalsToContact}" Placeholder="e.g. Dr. Jane Smith, 988 Crisis Line..." AutoSize="TextChanges" MinimumHeightRequest="80"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="5. Making the environment safe" Style="{StaticResource SectionHeading}"/>
+                        <Label Text="What can you do to make your surroundings safe right now?" Style="{StaticResource CaptionText}"/>
+                        <Border Style="{StaticResource InputBorder}" Padding="8">
+                            <Editor Text="{Binding SafeEnvironments}" Placeholder="e.g. Going to a public area, giving hazards to a trusted person..." AutoSize="TextChanges" MinimumHeightRequest="80"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Button Text="Save Safety Plan" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" Margin="0,12,0,0"/>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

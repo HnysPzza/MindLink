@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="M1ndLink.Views.SleepDiaryPage"
+             x:DataType="vm:SleepDiaryViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*,Auto">
+            <!-- Header -->
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#EDE9FE" Offset="0"/>
+                        <GradientStop Color="#00EDE9FE" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="←" FontSize="22" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0">
+                        <Label Text="Sleep Diary" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Track rest and recovery." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Main Input Form -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20" Spacing="24">
+                    
+                    <Border Style="{StaticResource CardBorder}" Padding="20">
+                        <VerticalStackLayout Spacing="16">
+                            <Label Text="Log Last Night" Style="{StaticResource SectionHeading}"/>
+                            
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                    <Label Text="Bed Time" Style="{StaticResource CaptionText}"/>
+                                    <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                                        <TimePicker Time="{Binding BedTime}" TextColor="{StaticResource TextPrimary}" BackgroundColor="Transparent"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                    <Label Text="Wake Time" Style="{StaticResource CaptionText}"/>
+                                    <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                                        <TimePicker Time="{Binding WakeTime}" TextColor="{StaticResource TextPrimary}" BackgroundColor="Transparent"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding QualityScore, StringFormat='Sleep Quality: {0}/5'}" Style="{StaticResource CaptionText}"/>
+                                <Slider Value="{Binding QualityScore}" Minimum="1" Maximum="5" MinimumTrackColor="{StaticResource AccentPrimary}"/>
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <Label Grid.Column="0" Text="Poor" FontSize="12" TextColor="{StaticResource TextMuted}"/>
+                                    <Label Grid.Column="2" Text="Great" FontSize="12" TextColor="{StaticResource TextMuted}"/>
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Notes" Style="{StaticResource CaptionText}"/>
+                                <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                                    <Entry Text="{Binding Notes}" Placeholder="Woke up twice..." BackgroundColor="Transparent" TextColor="{StaticResource TextPrimary}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <Button Text="Save Log" Style="{StaticResource PrimaryButton}" Command="{Binding SaveSleepCommand}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Label Text="Recent Logs" Style="{StaticResource SectionHeading}"/>
+                    
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding SleepHistory}" Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:SleepEntry">
+                                <Border Style="{StaticResource CardBorder}" Padding="16">
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*">
+                                        <Border Grid.RowSpan="2" Grid.Column="0" WidthRequest="46" HeightRequest="46" StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 23" Margin="0,0,16,0">
+                                            <Label Text="🌙" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Date, StringFormat='{0:MMM dd, yyyy}'}" FontFamily="SyneBold" FontSize="16"/>
+                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding HoursSlept, StringFormat='{0:F1} hrs ({1}/5)'}" Style="{StaticResource CaptionText}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

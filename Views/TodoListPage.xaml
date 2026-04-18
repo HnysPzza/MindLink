@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             x:Class="M1ndLink.Views.TodoListPage"
+             x:DataType="vm:TodoListViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FFEEF2FF" Offset="0"/>
+                        <GradientStop Color="#00EEF2FF" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Label Grid.Column="0" Text="←" FontSize="22" TextColor="{StaticResource AccentPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CancelCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="My Tasks" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Stay on top of what matters without losing your calm." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                    <Border Grid.Column="2" StrokeThickness="0" BackgroundColor="#E0E7FF" StrokeShape="RoundRectangle 16" Padding="12,8" VerticalOptions="Center">
+                        <Label Text="{Binding PendingCount, StringFormat='{}{0} open'}" FontFamily="DMSansSemiBold" FontSize="12" TextColor="#3730A3"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <ScrollView>
+                    <VerticalStackLayout Padding="20,0,20,110" Spacing="18">
+                        <Border StrokeShape="RoundRectangle 24" StrokeThickness="0" Padding="20">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#2563EB" Offset="0"/>
+                                    <GradientStop Color="#3B82F6" Offset="0.55"/>
+                                    <GradientStop Color="#60A5FA" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.Shadow><Shadow Brush="#332563EB" Offset="0,12" Radius="24" Opacity="0.28"/></Border.Shadow>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="Wellness Planner" FontFamily="DMSansBold" FontSize="18" TextColor="White"/>
+                                    <Label Text="{Binding FilterSummary}" FontFamily="JakartaRegular" FontSize="13" TextColor="#EAF2FF"/>
+                                </VerticalStackLayout>
+                                <Border Grid.Column="1" StrokeThickness="0" BackgroundColor="#22FFFFFF" StrokeShape="RoundRectangle 16" Padding="12,10" VerticalOptions="Start">
+                                    <Label Text="{Binding FilteredTasks.Count, StringFormat='{}{0} shown'}" FontFamily="DMSansSemiBold" FontSize="12" TextColor="White"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <Border StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="18">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                    <GradientStop Color="#B3FFFFFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Grid ColumnDefinitions="*,16,*">
+                                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                    <Label Text="Pending" Style="{StaticResource SectionLabel}"/>
+                                    <Label Text="{Binding PendingCount}" Style="{StaticResource StatNumber}"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                    <Label Text="Completed" Style="{StaticResource SectionLabel}"/>
+                                    <Label Text="{Binding CompletedCount}" Style="{StaticResource StatNumber}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Browse" Style="{StaticResource SectionHeading}"/>
+                            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Filters}" Spacing="10">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Border StrokeShape="RoundRectangle 16" Stroke="{StaticResource AccentSubtle}" StrokeThickness="1.2" Padding="16,8" BackgroundColor="#F8FAFF">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TodoListViewModel}}, Path=SetFilterCommand}" CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding .}" FontFamily="DMSansMedium" FontSize="13" TextColor="{StaticResource TextPrimary}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout IsVisible="{Binding HasTasks}" BindableLayout.ItemsSource="{Binding FilteredTasks}" Spacing="14">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:TodoTask">
+                                    <SwipeView>
+                                        <SwipeView.LeftItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Done" BackgroundColor="#22C55E" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TodoListViewModel}}, Path=ToggleTaskCommand}" CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.LeftItems>
+                                        <SwipeView.RightItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Delete" BackgroundColor="#EF4444" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TodoListViewModel}}, Path=DeleteTaskCommand}" CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+                                        <Border StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="0">
+                                            <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                                            <Grid ColumnDefinitions="6,*,Auto" Padding="0,16,16,16">
+                                                <BoxView Grid.Column="0" BackgroundColor="{Binding PriorityColor}" CornerRadius="0,4,4,0"/>
+                                                <VerticalStackLayout Grid.Column="1" Padding="16,0,12,0" Spacing="6">
+                                                    <HorizontalStackLayout Spacing="8">
+                                                        <Label Text="{Binding CategoryIcon}" FontSize="20"/>
+                                                        <Label Text="{Binding Title}" Style="{StaticResource CardTitle}"/>
+                                                    </HorizontalStackLayout>
+                                                    <Label Text="{Binding Description}" Style="{StaticResource BodyText}" MaxLines="2" IsVisible="{Binding Description, Converter={StaticResource StringNotEmptyConverter}}"/>
+                                                    <HorizontalStackLayout Spacing="8">
+                                                        <Border StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 12" Padding="10,4">
+                                                            <Label Text="{Binding CategoryLabel}" FontFamily="DMSansMedium" FontSize="11" TextColor="{Binding CategoryColor}"/>
+                                                        </Border>
+                                                        <Border StrokeThickness="0" BackgroundColor="#FEF3C7" StrokeShape="RoundRectangle 12" Padding="10,4">
+                                                            <Label Text="{Binding PriorityLabel}" FontFamily="DMSansMedium" FontSize="11" TextColor="{Binding PriorityColor}"/>
+                                                        </Border>
+                                                    </HorizontalStackLayout>
+                                                    <Label Text="{Binding DueDisplay}" Style="{StaticResource CaptionText}"/>
+                                                </VerticalStackLayout>
+                                                <VerticalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center">
+                                                    <Button Text="Open" Style="{StaticResource OutlineButton}" WidthRequest="82" HeightRequest="40" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TodoListViewModel}}, Path=OpenTaskCommand}" CommandParameter="{Binding .}"/>
+                                                    <Button Text="Done" Style="{StaticResource PillButton}" WidthRequest="82" HeightRequest="40" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TodoListViewModel}}, Path=ToggleTaskCommand}" CommandParameter="{Binding .}"/>
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </Border>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <Border IsVisible="{Binding HasTasks, Converter={StaticResource InverseBoolConverter}}" StrokeShape="RoundRectangle 22" Stroke="{StaticResource CardBorderColor}" StrokeThickness="1" Padding="24">
+                            <Border.Background><SolidColorBrush Color="#D9FFFFFF"/></Border.Background>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="✓" FontSize="44" HorizontalOptions="Center" TextColor="{StaticResource AccentPrimary}"/>
+                                <Label Text="No tasks in this view" Style="{StaticResource SectionHeading}" HorizontalOptions="Center"/>
+                                <Label Text="Create a clean list for self-care, appointments, goals, and more." Style="{StaticResource BodyText}" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <Button Text="＋ Add"
+                        WidthRequest="108"
+                        HeightRequest="58"
+                        CornerRadius="29"
+                        FontSize="18"
+                        FontFamily="DMSansBold"
+                        TextColor="White"
+                        BackgroundColor="#2563EB"
+                        HorizontalOptions="End"
+                        VerticalOptions="End"
+                        Margin="0,0,24,24"
+                        Command="{Binding OpenAddTaskCommand}">
+                    <Button.Shadow>
+                        <Shadow Brush="#332563EB" Offset="0,8" Radius="18" Opacity="0.35"/>
+                    </Button.Shadow>
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

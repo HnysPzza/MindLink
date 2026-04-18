@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="M1ndLink.Views.AdvancedReportingPage"
+             x:DataType="vm:AdvancedReportingViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+
+            <!-- ── Header ──────────────────────────────────────────────── -->
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,52,20,20">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#EDE9FE" Offset="0"/>
+                        <GradientStop Color="#00EDE9FE" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="←" FontSize="22" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="14,0,0,0">
+                        <Label Text="Wellness Insights" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="30-day patterns across mood, sleep, habits &amp; weather." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ── Scrollable body ─────────────────────────────────────── -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20" Spacing="24">
+
+                    <!-- ── 30-day Summary Banner ──────────── -->
+                    <Border StrokeShape="RoundRectangle 22" StrokeThickness="0" Padding="22">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#4F46E5" Offset="0"/>
+                                <GradientStop Color="#7C3AED" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow><Shadow Brush="#334F46E5" Offset="0,12" Radius="24" Opacity="0.4"/></Border.Shadow>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Last 30 Days" FontFamily="DMSansMedium" FontSize="13" TextColor="#D1C4FE"/>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="{Binding OverallMoodEmoji}" FontSize="38"/>
+                                    <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding OverallAvgMood, StringFormat='Avg Mood: {0:F1}/5'}" FontFamily="SyneBold" FontSize="22" TextColor="White"/>
+                                        <Label Text="{Binding TotalMoodLogs, StringFormat='{0} mood entries logged'}" FontFamily="JakartaRegular" FontSize="13" TextColor="#D1C4FE"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="🔥" FontSize="32" HorizontalOptions="Center"/>
+                                <Label Text="{Binding HabitStreakTotal, StringFormat='{0}'}" FontFamily="SyneBold" FontSize="26" TextColor="White" HorizontalOptions="Center"/>
+                                <Label Text="Habit Days" FontFamily="JakartaRegular" FontSize="11" TextColor="#D1C4FE" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- ── Mood Trend Chart ───────────────── -->
+                    <Border Style="{StaticResource CardBorder}" Padding="20">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="📈 30-Day Mood Trend" Style="{StaticResource CardTitle}"/>
+                            <controls:MoodLineChart Data="{Binding MoodTrend}" HeightRequest="110"/>
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="Sad" FontSize="11" TextColor="{StaticResource TextMuted}"/>
+                                <Label Grid.Column="2" Text="Happy" FontSize="11" TextColor="{StaticResource TextMuted}"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ── Sleep × Mood ───────────────────── -->
+                    <Label Text="Sleep &amp; Mood" Style="{StaticResource SectionHeading}"/>
+                    <Border Style="{StaticResource CardBorder}" Padding="20">
+                        <VerticalStackLayout Spacing="16">
+
+                            <Grid ColumnDefinitions="*,16,*" ColumnSpacing="0">
+                                <!-- Good Sleep -->
+                                <Border Grid.Column="0" StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 18" Padding="16">
+                                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                        <Label Text="😴 ≥ 7 hrs" FontFamily="DMSansSemiBold" FontSize="14" TextColor="#4338CA" HorizontalOptions="Center"/>
+                                        <Label Text="{Binding AvgMoodGoodSleep, StringFormat='{0:F1}'}" FontFamily="SyneBold" FontSize="34" TextColor="#4338CA" HorizontalOptions="Center"/>
+                                        <Label Text="avg mood" FontSize="12" TextColor="{StaticResource TextMuted}" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                                <!-- Poor Sleep -->
+                                <Border Grid.Column="2" StrokeThickness="0" BackgroundColor="#FEF2F2" StrokeShape="RoundRectangle 18" Padding="16">
+                                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                        <Label Text="😩 &lt; 7 hrs" FontFamily="DMSansSemiBold" FontSize="14" TextColor="#B91C1C" HorizontalOptions="Center"/>
+                                        <Label Text="{Binding AvgMoodPoorSleep, StringFormat='{0:F1}'}" FontFamily="SyneBold" FontSize="34" TextColor="#B91C1C" HorizontalOptions="Center"/>
+                                        <Label Text="avg mood" FontSize="12" TextColor="{StaticResource TextMuted}" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+
+                            <Border StrokeThickness="0" BackgroundColor="#F0FDF4" StrokeShape="RoundRectangle 14" Padding="14">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="💡" FontSize="18" VerticalOptions="Start"/>
+                                    <Label Text="{Binding SleepInsight}" FontFamily="JakartaRegular" FontSize="14" TextColor="#166534" LineBreakMode="WordWrap" HorizontalOptions="Fill"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ── Habits Insight ─────────────────── -->
+                    <Label Text="Habit Streaks" Style="{StaticResource SectionHeading}"/>
+                    <Border Style="{StaticResource CardBorder}" Padding="20">
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="10">
+                                <Label Text="🔥" FontSize="28"/>
+                                <Label Text="{Binding HabitStreakTotal, StringFormat='{0} total streak days'}" FontFamily="SyneBold" FontSize="22" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <Border StrokeThickness="0" BackgroundColor="#FEF3C7" StrokeShape="RoundRectangle 14" Padding="14">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="💡" FontSize="18" VerticalOptions="Start"/>
+                                    <Label Text="{Binding HabitInsight}" FontFamily="JakartaRegular" FontSize="14" TextColor="#92400E" LineBreakMode="WordWrap" HorizontalOptions="Fill"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ── Weather × Mood ─────────────────── -->
+                    <Label Text="Weather &amp; Mood" Style="{StaticResource SectionHeading}"/>
+                    <Border Style="{StaticResource CardBorder}" Padding="20">
+                        <VerticalStackLayout Spacing="14">
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding WeatherMoodRows}" Spacing="10"
+                                                 IsVisible="{Binding HasWeatherData}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:WeatherMoodRow">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                                            <Border WidthRequest="44" HeightRequest="44" StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 22">
+                                                <Label Text="{Binding Emoji}" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                                <Label Text="{Binding Condition}" FontFamily="DMSansSemiBold" FontSize="15" TextColor="{StaticResource TextPrimary}"/>
+                                                <Label Text="{Binding AvgMood, StringFormat='Avg mood: {0:F1}/5'}" Style="{StaticResource CaptionText}"/>
+                                            </VerticalStackLayout>
+                                            <Border Grid.Column="2" StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 12" Padding="12,6" VerticalOptions="Center">
+                                                <Label Text="{Binding AvgMood, StringFormat='{0:F1}'}" FontFamily="SyneBold" FontSize="16" TextColor="#4338CA"/>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                            <!-- Shown if no weather data yet -->
+                            <Label Text="Enable location when logging moods to unlock weather correlations."
+                                   Style="{StaticResource BodyText}" HorizontalTextAlignment="Center"
+                                   IsVisible="{Binding HasWeatherData, Converter={StaticResource InverseBoolConverter}}"/>
+
+                            <Border StrokeThickness="0" BackgroundColor="#EFF6FF" StrokeShape="RoundRectangle 14" Padding="14">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="💡" FontSize="18" VerticalOptions="Start"/>
+                                    <Label Text="{Binding WeatherInsight}" FontFamily="JakartaRegular" FontSize="14" TextColor="#1E40AF" LineBreakMode="WordWrap" HorizontalOptions="Fill"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

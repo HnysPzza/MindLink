@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             x:Class="M1ndLink.Views.LoadingPage"
+             Shell.NavBarIsVisible="False">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{StaticResource BgGradientStart}" Offset="0"/>
+                <GradientStop Color="{StaticResource BgGradientMid}" Offset="0.45"/>
+                <GradientStop Color="{StaticResource BgGradientEnd}" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <AbsoluteLayout InputTransparent="True">
+            <Border WidthRequest="220" HeightRequest="220" StrokeThickness="0" BackgroundColor="#223B82F6"
+                    StrokeShape="RoundRectangle 110" AbsoluteLayout.LayoutBounds="-40,-20,220,220"/>
+            <Border WidthRequest="280" HeightRequest="280" StrokeThickness="0" BackgroundColor="#1460A5FA"
+                    StrokeShape="RoundRectangle 140" AbsoluteLayout.LayoutBounds="1.02,0.98,280,280"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
+        </AbsoluteLayout>
+
+        <VerticalStackLayout Padding="28" Spacing="16" HorizontalOptions="Center" VerticalOptions="Center">
+            <!-- Static App Logo -->
+            <Image Source="appiconfg.png" WidthRequest="112" HeightRequest="112" HorizontalOptions="Center"/>
+            
+            <VerticalStackLayout Spacing="4" HorizontalOptions="Center" Margin="0,0,0,24">
+                <Label Text="MindLink" FontFamily="SyneBold" FontSize="30" TextColor="#0F172A" HorizontalOptions="Center"/>
+                <Label Text="Breathe, reflect, and stay connected." FontFamily="JakartaRegular" FontSize="14" TextColor="#5B6B83" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+            <ActivityIndicator IsRunning="True" Color="{StaticResource AccentPrimary}" HorizontalOptions="Center"/>
+            <Label x:Name="StatusLabel" Text="Preparing your calm space..." Style="{StaticResource BodyText}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

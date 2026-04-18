@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:M1ndLink.Controls"
+             xmlns:vm="clr-namespace:M1ndLink.ViewModels"
+             xmlns:models="clr-namespace:M1ndLink.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="M1ndLink.Views.TriggersPage"
+             x:DataType="vm:TriggersViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <controls:GradientBackgroundView InputTransparent="True" ZIndex="0"/>
+
+        <Grid ZIndex="1" RowDefinitions="Auto,*">
+            <!-- Header -->
+            <Border Grid.Row="0" StrokeThickness="0" Padding="20,52,20,16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FEE2E2" Offset="0"/>
+                        <GradientStop Color="#00FEE2E2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="←" FontSize="22" TextColor="{StaticResource TextPrimary}" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0">
+                        <Label Text="Trigger Log" Style="{StaticResource DisplayHeading}"/>
+                        <Label Text="Identify patterns &amp; emotional flashpoints." Style="{StaticResource CaptionText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Main Scroll -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20" Spacing="24">
+                    
+                    <Border Style="{StaticResource CardBorder}" Padding="20">
+                        <VerticalStackLayout Spacing="16">
+                            <Label Text="Log a New Trigger" Style="{StaticResource SectionHeading}"/>
+                            
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="What triggered you?" Style="{StaticResource CaptionText}"/>
+                                <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                                    <Entry Text="{Binding TriggerName}" Placeholder="e.g. Argument at work" BackgroundColor="Transparent" TextColor="{StaticResource TextPrimary}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Category" Style="{StaticResource CaptionText}"/>
+                                <Border Style="{StaticResource InputBorder}" Padding="12,4">
+                                    <Picker ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" BackgroundColor="Transparent" TextColor="{StaticResource TextPrimary}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding Intensity, StringFormat='Intensity: {0}/10'}" Style="{StaticResource CaptionText}"/>
+                                <Slider Value="{Binding Intensity}" Minimum="1" Maximum="10" MinimumTrackColor="#DC2626"/>
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <Label Grid.Column="0" Text="Mild" FontSize="12" TextColor="{StaticResource TextMuted}"/>
+                                    <Label Grid.Column="2" Text="Severe" FontSize="12" TextColor="{StaticResource TextMuted}"/>
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <Button Text="Save Log" Style="{StaticResource PrimaryButton}" Command="{Binding SaveTriggerCommand}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Label Text="Recent Logs" Style="{StaticResource SectionHeading}"/>
+                    
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentTriggers}" Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:TriggerLog">
+                                <Border Style="{StaticResource CardBorder}" Padding="16">
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+                                        <Border Grid.RowSpan="2" Grid.Column="0" WidthRequest="46" HeightRequest="46" StrokeThickness="0" BackgroundColor="#FEF2F2" StrokeShape="RoundRectangle 23" Margin="0,0,16,0">
+                                            <Label Text="⚡" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding TriggerName}" FontFamily="SyneBold" FontSize="16" TextColor="Black"/>
+                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Category}" Style="{StaticResource CaptionText}"/>
+                                        
+                                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" StrokeThickness="0" BackgroundColor="#FEF2F2" StrokeShape="RoundRectangle 12" Padding="12,6" VerticalOptions="Center">
+                                            <Label Text="{Binding Intensity, StringFormat='{0}/10'}" FontFamily="DMSansBold" FontSize="14" TextColor="#DC2626"/>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>
