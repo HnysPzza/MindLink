@@ -1,0 +1,1 @@
+"MindLink is a beautifully designed, cross-platform wellness companion built with .NET MAUI. It seamlessly integrates mood tracking, habit building, medication management, and calming exercises into one premium, clean interface."
