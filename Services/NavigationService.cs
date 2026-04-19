@@ -42,7 +42,7 @@ public class NavigationService : INavigationService
             {
                 await _syncService.PullFromCloudAsync();
 
-                Application.Current!.MainPage = new AppShell();
+                Application.Current!.MainPage = _serviceProvider.GetRequiredService<AppShell>();
             }
         }
         catch (Exception ex)

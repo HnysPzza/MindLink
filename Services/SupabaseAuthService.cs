@@ -35,6 +35,15 @@ public class SupabaseAuthService : IAuthService
         try
         {
             var session = await _supabase.Auth.SignUp(email, password);
+            
+            // If email confirmations are disabled on the backend, Supabase instantly issues an AccessToken
+            if (session?.User != null && !string.IsNullOrEmpty(session.AccessToken))
+            {
+                await SaveSessionAsync(session);
+                return (true, string.Empty);
+            }
+            
+            // Otherwise, it was successful but requires email verification
             bool success = session?.User != null || _supabase.Auth.CurrentUser != null;
             return (success, string.Empty);
         }

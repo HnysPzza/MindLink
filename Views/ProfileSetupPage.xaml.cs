@@ -1,15 +1,18 @@
 using M1ndLink.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace M1ndLink.Views;
 
 public partial class ProfileSetupPage : ContentPage
 {
     private readonly ProfileSetupViewModel _viewModel;
+    private readonly IServiceProvider _serviceProvider;
 
-    public ProfileSetupPage(ProfileSetupViewModel viewModel)
+    public ProfileSetupPage(ProfileSetupViewModel viewModel, IServiceProvider serviceProvider)
     {
         InitializeComponent();
         _viewModel = viewModel;
+        _serviceProvider = serviceProvider;
         BindingContext = viewModel;
     }
 
@@ -37,6 +40,6 @@ public partial class ProfileSetupPage : ContentPage
     private void OnSkipTapped(object sender, EventArgs e)
     {
         // Navigate directly to app without saving profile
-        Application.Current!.MainPage = new AppShell();
+        Application.Current!.MainPage = _serviceProvider.GetRequiredService<AppShell>();
     }
 }

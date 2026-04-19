@@ -103,6 +103,9 @@ public static class MauiProgram
         builder.Services.AddTransient<TriggersViewModel>();
         builder.Services.AddTransient<AdvancedReportingViewModel>();
 
+        // Shell
+        builder.Services.AddTransient<AppShell>();
+
         // Pages (Transient)
         builder.Services.AddTransient<LoadingPage>();
         builder.Services.AddTransient<OnboardingPage>();

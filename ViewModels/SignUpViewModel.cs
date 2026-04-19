@@ -80,11 +80,20 @@ public partial class SignUpViewModel : BaseViewModel
             // Wipe any corrupted or stale local data just in case
             await _db.ClearAllDataAsync();
 
-            await Application.Current?.MainPage?.DisplayAlert("Success", "Account created! Please check your email for the verification code.", "OK");
-            
-            // Go to OTP Verification
-            var verifyVm = new VerifyOtpViewModel(_authService, _profileService, _db, _navService) { Email = Email };
-            Application.Current!.MainPage = new VerifyOtpPage(verifyVm);
+            // If Supabase immediately authenticated them (because email confirmations are turned off), bypass OTP!
+            if (_authService.IsUserLoggedIn())
+            {
+                await Application.Current?.MainPage?.DisplayAlert("Welcome!", "Your account has been created successfully.", "OK");
+                await _navService.NavigateAfterLoginAsync();
+            }
+            else
+            {
+                await Application.Current?.MainPage?.DisplayAlert("Success", "Account created! Please check your email for the verification code.", "OK");
+                
+                // Go to OTP Verification
+                var verifyVm = new VerifyOtpViewModel(_authService, _profileService, _db, _navService) { Email = Email };
+                Application.Current!.MainPage = new VerifyOtpPage(verifyVm);
+            }
         }
         else
         {

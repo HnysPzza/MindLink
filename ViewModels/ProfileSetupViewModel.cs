@@ -11,6 +11,7 @@ public partial class ProfileSetupViewModel : BaseViewModel
     private readonly IProfileService _profileService;
     private readonly IDatabaseService _db;
     private readonly IAuthService _authService;
+    private readonly IServiceProvider _serviceProvider;
 
     [ObservableProperty] private string _fullName = string.Empty;
     [ObservableProperty] private string _bio = string.Empty;
@@ -26,11 +27,13 @@ public partial class ProfileSetupViewModel : BaseViewModel
     public ProfileSetupViewModel(
         IProfileService profileService,
         IDatabaseService db,
-        IAuthService authService)
+        IAuthService authService,
+        IServiceProvider serviceProvider)
     {
         _profileService = profileService;
         _db = db;
         _authService = authService;
+        _serviceProvider = serviceProvider;
         Title = "Set Up Your Profile";
     }
 
@@ -128,6 +131,6 @@ public partial class ProfileSetupViewModel : BaseViewModel
         }
 
         // Navigate into the main app
-        Application.Current!.MainPage = new AppShell();
+        Application.Current!.MainPage = _serviceProvider.GetRequiredService<AppShell>();
     }
 }
